@@ -12,10 +12,14 @@ THIRD_PARTY_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'thi
 ##### Bullet #####
 BULLET_VERSION = '2.87'
 BULLET_DIRECTORY = os.path.join(THIRD_PARTY_DIR, 'bullet3-' + BULLET_VERSION)
+BULLET_ZIP_FILE_NAME = BULLET_VERSION + '.zip'
+BULLET_ZIP_URL = 'https://github.com/bulletphysics/bullet3/archive/' + BULLET_ZIP_FILE_NAME
 
 ##### Emscripten #####
 EMSCRIPTEN_VERSION = '1.37.33'
 EMSCRIPTEN_DIRECTORY = os.path.join(THIRD_PARTY_DIR, 'emscripten-' + EMSCRIPTEN_VERSION)
+EMSCRIPTEN_ZIP_FILE_NAME = EMSCRIPTEN_VERSION + '.zip'
+EMSCRIPTEN_ZIP_URL = 'https://github.com/kripken/emscripten/archive/' + EMSCRIPTEN_ZIP_FILE_NAME
 
 ########## Arguments ##########
 argument_parser = argparse.ArgumentParser(description='Bullet.js')
@@ -32,36 +36,30 @@ def setup():
     print('========== Starting the setup ... ==========')
 
     ##### Emscripten #####
-    emscripten_zip_file_name = EMSCRIPTEN_VERSION + '.zip'
-    emscripten_url = 'https://github.com/kripken/emscripten/archive/' + emscripten_zip_file_name
-
-    print('===== Starting to prepare ***emscripten*** ... =====')
+    print('===== Starting to prepare EMSCRIPTEN ... =====')
 
     if os.path.isdir(EMSCRIPTEN_DIRECTORY):
-        print('----- Emscripten already downloaded. -----')
+        print('----- EMSCRIPTEN already downloaded. -----')
     else:
-        print('----- Starting to download emscripten v' + EMSCRIPTEN_VERSION + ' (' + emscripten_url + ') ... -----')
-        emscripten_request = requests.get(emscripten_url)
+        print('----- Starting to download EMSCRIPTEN v' + EMSCRIPTEN_VERSION + ' (' + EMSCRIPTEN_ZIP_URL + ') ... -----')
+        emscripten_request = requests.get(EMSCRIPTEN_ZIP_URL)
         emscripten_zip_file = ZipFile(BytesIO(emscripten_request.content))
         emscripten_zip_file.extractall(THIRD_PARTY_DIR)
 
-    print('===== ***Emscripten*** prepared. =====')
+    print('===== EMSCRIPTEN prepared. =====')
 
     ##### Bullet #####
-    bullet_zip_file_name = BULLET_VERSION + '.zip'
-    bullet_url = 'https://github.com/bulletphysics/bullet3/archive/' + bullet_zip_file_name
-
-    print('===== Starting to prepare ***bullet*** ... =====')
+    print('===== Starting to prepare BULLET ... =====')
 
     if os.path.isdir(BULLET_DIRECTORY):
-        print('----- Bullet already downloaded. -----')
+        print('----- BULLET already downloaded. -----')
     else:
-        print('----- Starting to download bullet v' + BULLET_VERSION + ' (' + bullet_url + ') ... -----')
-        bullet_request = requests.get(bullet_url)
+        print('----- Starting to download BULLET v' + BULLET_VERSION + ' (' + BULLET_ZIP_URL + ') ... -----')
+        bullet_request = requests.get(BULLET_ZIP_URL)
         bullet_zip_file = ZipFile(BytesIO(bullet_request.content))
         bullet_zip_file.extractall(THIRD_PARTY_DIR)
 
-    print('===== ***Bullet*** prepared. =====')
+    print('===== BULLET prepared. =====')
 
     print('========== Setup completed! ==========')
 
