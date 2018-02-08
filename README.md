@@ -2,6 +2,8 @@
 
 A JS port of the C++ [Bullet3](https://github.com/bulletphysics/bullet3) physics engine.
 
+**Note: It's still under heavy under development. I'm currently still learning emscripten & stuff.**
+
 
 ## Requirements
 

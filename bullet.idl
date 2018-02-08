@@ -1,0 +1,63 @@
+// Linear math
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtVector3.html
+interface btVector3 {
+    void btVector3();
+    void btVector3(float x, float y, float z);
+
+    [Operator="+=", Ref] btVector3 op_add([Ref] btVector3 v);
+    [Operator="-=", Ref] btVector3 op_sub([Ref] btVector3 v);
+    [Operator="*=", Ref] btVector3 op_mul(float s);
+    [Operator="/=", Ref] btVector3 op_div(float s);
+
+    float dot([Ref] btVector3 v);
+
+    float length2();
+    float length();
+    float norm();
+    float distance2([Ref] btVector3 v);
+    float distance([Ref] btVector3 v);
+
+    [Ref] btVector3 safeNormalize();
+    [Ref] btVector3 normalize();
+    void normalized();
+
+    [Value] btVector3 rotate([Ref] btVector3 wAxis, float angle);
+    float angle([Ref] btVector3 v);
+    [Value] btVector3 absolute();
+    [Value] btVector3 cross([Ref] btVector3 v);
+    float triple([Ref] btVector3 v1, [Ref] btVector3 v2);
+
+    float minAxis();
+    float maxAxis();
+    float furthestAxis();
+    float closestAxis();
+
+    void setInterpolate3([Ref] btVector3 v0, [Ref] btVector3 v1, float rt);
+    [Value] btVector3 lerp([Ref] btVector3 v, float t);
+
+    float getX();
+    float getY();
+    float getZ();
+    void setX(float _x);
+    void setY(float _y);
+    void setZ(float _z);
+    void setW(float _w);
+    float x();
+    float y();
+    float z();
+    float w();
+
+    [Operator="=="] boolean op_eq([Ref] btVector3 other);
+
+    void setMax([Ref] btVector3 other);
+    void setMin([Ref] btVector3 other);
+    void setValue(float _x, float _y, float _z);
+    void getSkewSymmetricMatrix(btVector3 v0, btVector3 v1, btVector3 v2);
+
+    void setZero();
+    boolean isZero();
+    boolean fuzzyZero();
+
+    [Value] btVector3 dot3([Ref] btVector3 v0, [Ref] btVector3 v1, [Ref] btVector3 v2);
+};

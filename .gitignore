@@ -1,2 +1,5 @@
 *.py[co]
+glue.*
+*.out
+*.pkl
 third_party/*
