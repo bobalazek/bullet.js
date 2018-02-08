@@ -1,4 +1,6 @@
-// Linear math
+////////// Linear math //////////
+
+///// Vectors /////
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtVector3.html
 interface btVector3 {
@@ -11,7 +13,6 @@ interface btVector3 {
     [Operator="/=", Ref] btVector3 op_div(float s);
 
     float dot([Ref] btVector3 v);
-
     float length2();
     float length();
     float norm();
@@ -35,6 +36,8 @@ interface btVector3 {
 
     void setInterpolate3([Ref] btVector3 v0, [Ref] btVector3 v1, float rt);
     [Value] btVector3 lerp([Ref] btVector3 v, float t);
+
+    [Operator="*=", Ref] btVector3 op_mul_v([Ref] btVector3 v);
 
     float getX();
     float getY();
@@ -75,3 +78,60 @@ interface btVector4 {
     void setValue(float _x, float _y, float _z, float _w);
 };
 btVector4 implements btVector3;
+
+///// Quaternions /////
+
+interface btQuadWord {
+    float getX();
+    float getY();
+    float getZ();
+    void setX(float _x);
+    void setY(float _y);
+    void setZ(float _z);
+    void setW(float _w);
+    float x();
+    float y();
+    float z();
+    float w();
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtQuaternion.html
+interface btQuaternion {
+    void btQuaternion();
+    void btQuaternion(float _x, float _y, float _z, float _w);
+    void btQuaternion([Ref] btVector3 _axis, float _angle);
+    void btQuaternion(float yaw, float pitch, float roll);
+
+    void setRotation([Ref] btVector3 axis, float _angle);
+    void setEuler(float yaw, float pitch, float roll);
+    void setEulerZYX(float yaw, float pitch, float roll);
+
+    [Operator="+=", Ref] btQuaternion op_add([Ref] btQuaternion q);
+    [Operator="-=", Ref] btQuaternion op_sub([Ref] btQuaternion q);
+    [Operator="*=", Ref] btQuaternion op_mul(float s);
+    [Operator="*=", Ref] btQuaternion op_mul_q([Ref] btQuaternion q);
+
+    float dot([Ref] btQuaternion q);
+    float length2();
+    float length();
+    [Ref] btQuaternion normalize();
+
+    [Operator="/=", Ref] btQuaternion op_div(float s);
+
+    void normalized();
+
+    float angle([Ref] btQuaternion q);
+    float angleShortestPath([Ref] btQuaternion q);
+    float getAngle();
+    float getAngleShortestPath();
+
+    [Value] btVector3 getAxis();
+
+    [Value] btQuaternion inverse();
+
+    [Value] btQuaternion farthest([Ref] btQuaternion qd);
+    [Value] btQuaternion nearest([Ref] btQuaternion qd);
+    [Value] btQuaternion slerp([Ref] btQuaternion q, float t);
+
+    float getW();
+};

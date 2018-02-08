@@ -33,6 +33,8 @@ BULLET_INCLUDES = []
 # Populate the bullet includes
 BULLET_INCLUDES = [
     os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btVector3.h'),
+    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuadWord.h'),
+    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuaternion.h'),
 ]
 
 # TODO
