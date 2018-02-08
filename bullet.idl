@@ -3,7 +3,7 @@
 // http://bulletphysics.org/Bullet/BulletFull/classbtVector3.html
 interface btVector3 {
     void btVector3();
-    void btVector3(float x, float y, float z);
+    void btVector3(float _x, float _y, float _z);
 
     [Operator="+=", Ref] btVector3 op_add([Ref] btVector3 v);
     [Operator="-=", Ref] btVector3 op_sub([Ref] btVector3 v);
@@ -61,3 +61,17 @@ interface btVector3 {
 
     [Value] btVector3 dot3([Ref] btVector3 v0, [Ref] btVector3 v1, [Ref] btVector3 v2);
 };
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtVector4.html
+interface btVector4 {
+    void btVector4();
+    void btVector4(float _x, float _y, float _z, float _w);
+
+    [Value] btVector4 absolute4();
+    float getW();
+    float maxAxis4();
+    float minAxis4();
+    float closestAxis4();
+    void setValue(float _x, float _y, float _z, float _w);
+};
+btVector4 implements btVector3;
