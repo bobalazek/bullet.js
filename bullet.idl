@@ -12,30 +12,30 @@ interface btVector3 {
     [Operator="*=", Ref] btVector3 op_mul(float s);
     [Operator="/=", Ref] btVector3 op_div(float s);
 
-    float dot([Ref] btVector3 v);
+    float dot([Ref, Const] btVector3 v);
     float length2();
     float length();
     float norm();
-    float distance2([Ref] btVector3 v);
-    float distance([Ref] btVector3 v);
+    float distance2([Ref, Const] btVector3 v);
+    float distance([Ref, Const] btVector3 v);
 
     [Ref] btVector3 safeNormalize();
     [Ref] btVector3 normalize();
     void normalized();
 
-    [Value] btVector3 rotate([Ref] btVector3 wAxis, float angle);
-    float angle([Ref] btVector3 v);
+    [Value] btVector3 rotate([Ref, Const] btVector3 wAxis, float angle);
+    float angle([Ref, Const] btVector3 v);
     [Value] btVector3 absolute();
-    [Value] btVector3 cross([Ref] btVector3 v);
-    float triple([Ref] btVector3 v1, [Ref] btVector3 v2);
+    [Value] btVector3 cross([Ref, Const] btVector3 v);
+    float triple([Ref, Const] btVector3 v1, [Ref, Const] btVector3 v2);
 
     long minAxis();
     long maxAxis();
     long furthestAxis();
     long closestAxis();
 
-    void setInterpolate3([Ref] btVector3 v0, [Ref] btVector3 v1, float rt);
-    [Value] btVector3 lerp([Ref] btVector3 v, float t);
+    void setInterpolate3([Ref, Const] btVector3 v0, [Ref, Const] btVector3 v1, float rt);
+    [Value] btVector3 lerp([Ref, Const] btVector3 v, float t);
 
     [Operator="*=", Ref] btVector3 op_mul_v([Ref] btVector3 v);
 
@@ -51,10 +51,10 @@ interface btVector3 {
     float z();
     float w();
 
-    [Operator="=="] boolean op_eq([Ref] btVector3 other);
+    [Operator="=="] boolean op_eq([Ref, Const] btVector3 other);
 
-    void setMax([Ref] btVector3 other);
-    void setMin([Ref] btVector3 other);
+    void setMax([Ref, Const] btVector3 other);
+    void setMin([Ref, Const] btVector3 other);
     void setValue(float _x, float _y, float _z);
     void getSkewSymmetricMatrix(btVector3 v0, btVector3 v1, btVector3 v2);
 
@@ -62,7 +62,7 @@ interface btVector3 {
     boolean isZero();
     boolean fuzzyZero();
 
-    [Value] btVector3 dot3([Ref] btVector3 v0, [Ref] btVector3 v1, [Ref] btVector3 v2);
+    [Value] btVector3 dot3([Ref, Const] btVector3 v0, [Ref, Const] btVector3 v1, [Ref, Const] btVector3 v2);
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtVector4.html
@@ -99,19 +99,19 @@ interface btQuadWord {
 interface btQuaternion {
     void btQuaternion();
     void btQuaternion(float _x, float _y, float _z, float _w);
-    void btQuaternion([Ref] btVector3 _axis, float _angle);
+    void btQuaternion([Ref, Const] btVector3 _axis, float _angle);
     void btQuaternion(float yaw, float pitch, float roll);
 
-    void setRotation([Ref] btVector3 axis, float _angle);
+    void setRotation([Ref, Const] btVector3 axis, float _angle);
     void setEuler(float yaw, float pitch, float roll);
     void setEulerZYX(float yaw, float pitch, float roll);
 
-    [Operator="+=", Ref] btQuaternion op_add([Ref] btQuaternion q);
-    [Operator="-=", Ref] btQuaternion op_sub([Ref] btQuaternion q);
+    [Operator="+=", Ref] btQuaternion op_add([Ref, Const] btQuaternion q);
+    [Operator="-=", Ref] btQuaternion op_sub([Ref, Const] btQuaternion q);
     [Operator="*=", Ref] btQuaternion op_mul(float s);
-    [Operator="*=", Ref] btQuaternion op_mul_q([Ref] btQuaternion q);
+    [Operator="*=", Ref] btQuaternion op_mul_q([Ref, Const] btQuaternion q);
 
-    float dot([Ref] btQuaternion q);
+    float dot([Ref, Const] btQuaternion q);
     float length2();
     float length();
     [Ref] btQuaternion normalize();
@@ -120,8 +120,8 @@ interface btQuaternion {
 
     void normalized();
 
-    float angle([Ref] btQuaternion q);
-    float angleShortestPath([Ref] btQuaternion q);
+    float angle([Ref, Const] btQuaternion q);
+    float angleShortestPath([Ref, Const] btQuaternion q);
     float getAngle();
     float getAngleShortestPath();
 
@@ -129,30 +129,32 @@ interface btQuaternion {
 
     [Value] btQuaternion inverse();
 
-    [Value] btQuaternion farthest([Ref] btQuaternion qd);
-    [Value] btQuaternion nearest([Ref] btQuaternion qd);
-    [Value] btQuaternion slerp([Ref] btQuaternion q, float t);
+    [Value] btQuaternion farthest([Ref, Const] btQuaternion qd);
+    [Value] btQuaternion nearest([Ref, Const] btQuaternion qd);
+    [Value] btQuaternion slerp([Ref, Const] btQuaternion q, float t);
 
     float getW();
+
+    [Ref, Const] btQuaternion getIdentity();
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtMatrix3x3.html
 interface btMatrix3x3 {
     void btMatrix3x3();
-    // void btMatrix3x3([Ref] btQuaternion q);
+    // void btMatrix3x3([Ref, Const] btQuaternion q);
     void btMatrix3x3(float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz);
-    void btMatrix3x3([Ref] btMatrix3x3 other);
+    void btMatrix3x3([Ref, Const] btMatrix3x3 other);
 
     [Value] btVector3 getColumn(long i);
     [Value] btVector3 getRow(long i);
 
-    [Operator="*=", Ref] btMatrix3x3 op_mul([Ref] btMatrix3x3 m);
-    [Operator="+=", Ref] btMatrix3x3 op_add([Ref] btMatrix3x3 m);
-    [Operator="-=", Ref] btMatrix3x3 op_sub([Ref] btMatrix3x3 m);
+    [Operator="*=", Ref] btMatrix3x3 op_mul([Ref, Const] btMatrix3x3 m);
+    [Operator="+=", Ref] btMatrix3x3 op_add([Ref, Const] btMatrix3x3 m);
+    [Operator="-=", Ref] btMatrix3x3 op_sub([Ref, Const] btMatrix3x3 m);
 
     // void setFromOpenGLSubMatrix(float m);
     void setValue(float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz);
-    void setRotation([Ref] btQuaternion q);
+    void setRotation([Ref, Const] btQuaternion q);
     void setEulerYPR(float yaw, float pitch, float roll);
     void setEulerZYX(float eulerX, float eulerY, float eulerZ);
     void setIdentity();
@@ -162,18 +164,18 @@ interface btMatrix3x3 {
     void getEulerYPR(float yaw, float pitch, float roll);
     void getEulerZYX(float eulerX, float eulerY, float eulerZ);
 
-    [Value] btMatrix3x3 scaled([Ref] btVector3 s);
+    [Value] btMatrix3x3 scaled([Ref, Const] btVector3 s);
     float determinant();
     [Value] btMatrix3x3 adjoint();
     [Value] btMatrix3x3 absolute();
     [Value] btMatrix3x3 transpose();
     [Value] btMatrix3x3 inverse();
-    [Value] btVector3 solve33([Ref] btVector3 b);
-    [Value] btMatrix3x3 transposeTimes([Ref] btMatrix3x3 m);
-    [Value] btMatrix3x3 timesTranspose([Ref] btMatrix3x3 m);
-    float tdotx([Ref] btVector3 v);
-    float tdoty([Ref] btVector3 v);
-    float tdotz([Ref] btVector3 v);
+    [Value] btVector3 solve33([Ref, Const] btVector3 b);
+    [Value] btMatrix3x3 transposeTimes([Ref, Const] btMatrix3x3 m);
+    [Value] btMatrix3x3 timesTranspose([Ref, Const] btMatrix3x3 m);
+    float tdotx([Ref, Const] btVector3 v);
+    float tdoty([Ref, Const] btVector3 v);
+    float tdotz([Ref, Const] btVector3 v);
 
     void diagonalize([Ref] btMatrix3x3 rot, float threshold, long maxSteps);
     float cofac(long r1, long c1, long r2, long c2);
@@ -184,29 +186,31 @@ interface btMatrix3x3 {
 // http://bulletphysics.org/Bullet/BulletFull/classbtTransform.html
 interface btTransform {
     void btTransform();
-    void btTransform([Ref] btQuaternion q, [Ref] btVector3 c);
-    // void btTransform([Ref] btMatrix3x3 b, [Ref] btVector3 c);
-    void btTransform([Ref] btTransform other);
+    void btTransform([Ref, Const] btQuaternion q, [Ref, Const] btVector3 c);
+    // void btTransform([Ref, Const] btMatrix3x3 b, [Ref, Const] btVector3 c);
+    void btTransform([Ref, Const] btTransform other);
 
-    void mult([Ref] btTransform t1, [Ref] btTransform t2);
+    void mult([Ref, Const] btTransform t1, [Ref, Const] btTransform t2);
 
-    [Ref] btMatrix3x3 getBasis();
-    [Ref] btVector3 getOrigin();
+    [Ref, Const] btMatrix3x3 getBasis();
+    [Ref, Const] btVector3 getOrigin();
     [Value] btQuaternion getRotation();
 
     // void setFromOpenGLSubMatrix(float m);
     // void getOpenGLSubMatrix(float m);
 
-    void setOrigin([Ref] btVector3 origin);
-    [Value] btVector3 invXform([Ref] btVector3 inVec);
+    void setOrigin([Ref, Const] btVector3 origin);
+    [Value] btVector3 invXform([Ref, Const] btVector3 inVec);
 
-    void setBasis([Ref] btMatrix3x3 basis);
-    void setRotation([Ref] btQuaternion q);
+    void setBasis([Ref, Const] btMatrix3x3 basis);
+    void setRotation([Ref, Const] btQuaternion q);
     void setIdentity();
 
-    [Operator="*=", Ref] btTransform op_mul([Ref] btTransform t);
+    [Operator="*=", Ref] btTransform op_mul([Ref, Const] btTransform t);
     [Value] btTransform inverse();
-    [Value] btTransform inverseTimes([Ref] btTransform t);
+    [Value] btTransform inverseTimes([Ref, Const] btTransform t);
+
+    [Ref, Const] btTransform getIdentity();
 };
 
 ////////// Collision //////////
@@ -214,6 +218,40 @@ interface btTransform {
 ///// Shapes /////
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionShape.html
-//interface btCollisionShape {
-//    void btCollisionShape();
-//};
+interface btCollisionShape {
+    void getAabb([Ref, Const] btTransform t, [Ref] btVector3 aabbMin, [Ref] btVector3 aabbMax);
+    void getBoundingSphere([Ref] btVector3 center, float radius);
+    float getAngularMotionDisc();
+    float getContactBreakingThreshold(float defaultContactThresholdFactor);
+
+    void calculateTemporalAabb(
+        [Ref, Const] btTransform curTrans,
+        [Ref, Const] btVector3 linvel,
+        [Ref, Const] btVector3 angvel,
+        float timeStep,
+        [Ref] btVector3 temporalAabbMin,
+        [Ref] btVector3 temporalAabbMax
+    );
+
+    boolean isPolyhedral();
+    boolean isConvex2d();
+    boolean isConvex();
+    boolean isNonMoving();
+    boolean isConcave();
+    boolean isCompound();
+    boolean isSoftBody();
+    boolean isInfinite();
+
+    void setLocalScaling([Ref] btVector3 scaling);
+    [Const, Ref] btVector3 getLocalScaling();
+
+    void calculateLocalInertia(float mass, [Ref] btVector3 inertia);
+
+    [Const] DOMString getName();
+    long getShapeType();
+
+    [Value] btVector3 getAnisotropicRollingFrictionDirection();
+
+    void setMargin(float margin);
+    float getMargin();
+};
