@@ -29,10 +29,10 @@ interface btVector3 {
     [Value] btVector3 cross([Ref] btVector3 v);
     float triple([Ref] btVector3 v1, [Ref] btVector3 v2);
 
-    float minAxis();
-    float maxAxis();
-    float furthestAxis();
-    float closestAxis();
+    long minAxis();
+    long maxAxis();
+    long furthestAxis();
+    long closestAxis();
 
     void setInterpolate3([Ref] btVector3 v0, [Ref] btVector3 v1, float rt);
     [Value] btVector3 lerp([Ref] btVector3 v, float t);
@@ -72,8 +72,8 @@ interface btVector4 {
 
     [Value] btVector4 absolute4();
     float getW();
-    float maxAxis4();
-    float minAxis4();
+    long maxAxis4();
+    long minAxis4();
     float closestAxis4();
     void setValue(float _x, float _y, float _z, float _w);
 };
