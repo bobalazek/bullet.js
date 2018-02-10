@@ -1,4 +1,4 @@
-////////// Linear math //////////
+////////// Linear Math //////////
 
 ///// Vectors /////
 
@@ -135,3 +135,85 @@ interface btQuaternion {
 
     float getW();
 };
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtMatrix3x3.html
+interface btMatrix3x3 {
+    void btMatrix3x3();
+    // void btMatrix3x3([Ref] btQuaternion q);
+    void btMatrix3x3(float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz);
+    void btMatrix3x3([Ref] btMatrix3x3 other);
+
+    [Value] btVector3 getColumn(long i);
+    [Value] btVector3 getRow(long i);
+
+    [Operator="*=", Ref] btMatrix3x3 op_mul([Ref] btMatrix3x3 m);
+    [Operator="+=", Ref] btMatrix3x3 op_add([Ref] btMatrix3x3 m);
+    [Operator="-=", Ref] btMatrix3x3 op_sub([Ref] btMatrix3x3 m);
+
+    // void setFromOpenGLSubMatrix(float m);
+    void setValue(float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz);
+    void setRotation([Ref] btQuaternion q);
+    void setEulerYPR(float yaw, float pitch, float roll);
+    void setEulerZYX(float eulerX, float eulerY, float eulerZ);
+    void setIdentity();
+
+    // void getOpenGLSubMatrix(float m);
+    void getRotation([Ref] btQuaternion q);
+    void getEulerYPR(float yaw, float pitch, float roll);
+    void getEulerZYX(float eulerX, float eulerY, float eulerZ);
+
+    [Value] btMatrix3x3 scaled([Ref] btVector3 s);
+    float determinant();
+    [Value] btMatrix3x3 adjoint();
+    [Value] btMatrix3x3 absolute();
+    [Value] btMatrix3x3 transpose();
+    [Value] btMatrix3x3 inverse();
+    [Value] btVector3 solve33([Ref] btVector3 b);
+    [Value] btMatrix3x3 transposeTimes([Ref] btMatrix3x3 m);
+    [Value] btMatrix3x3 timesTranspose([Ref] btMatrix3x3 m);
+    float tdotx([Ref] btVector3 v);
+    float tdoty([Ref] btVector3 v);
+    float tdotz([Ref] btVector3 v);
+
+    void diagonalize([Ref] btMatrix3x3 rot, float threshold, long maxSteps);
+    float cofac(long r1, long c1, long r2, long c2);
+
+    [Ref, Const] btMatrix3x3 getIdentity();
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtTransform.html
+interface btTransform {
+    void btTransform();
+    void btTransform([Ref] btQuaternion q, [Ref] btVector3 c);
+    // void btTransform([Ref] btMatrix3x3 b, [Ref] btVector3 c);
+    void btTransform([Ref] btTransform other);
+
+    void mult([Ref] btTransform t1, [Ref] btTransform t2);
+
+    [Ref] btMatrix3x3 getBasis();
+    [Ref] btVector3 getOrigin();
+    [Value] btQuaternion getRotation();
+
+    // void setFromOpenGLSubMatrix(float m);
+    // void getOpenGLSubMatrix(float m);
+
+    void setOrigin([Ref] btVector3 origin);
+    [Value] btVector3 invXform([Ref] btVector3 inVec);
+
+    void setBasis([Ref] btMatrix3x3 basis);
+    void setRotation([Ref] btQuaternion q);
+    void setIdentity();
+
+    [Operator="*=", Ref] btTransform op_mul([Ref] btTransform t);
+    [Value] btTransform inverse();
+    [Value] btTransform inverseTimes([Ref] btTransform t);
+};
+
+////////// Collision //////////
+
+///// Shapes /////
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionShape.html
+//interface btCollisionShape {
+//    void btCollisionShape();
+//};

@@ -40,7 +40,11 @@ BULLET_INCLUDES = [
     os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btVector3.h'),
     os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuadWord.h'),
     os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuaternion.h'),
+    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btMatrix3x3.h'),
+    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btTransform.h'),
     # Collision
+    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                 'CollisionShapes', 'btCollisionShape.h'),
     os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                  'CollisionShapes', 'btBoxShape.h'),
     os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
