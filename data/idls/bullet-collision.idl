@@ -7,6 +7,66 @@ interface btTriangleCallback {
 
 ///// Collision Dispatch /////
 
+// http://bulletphysics.org/Bullet/BulletFull/classbtDispatcher.html
+interface btDispatcher {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtBroadphaseInterface.html
+interface btBroadphaseInterface {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionConfiguration.html
+interface btCollisionConfiguration {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtDispatcherInfo.html
+interface btDispatcherInfo {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/btCollisionObject_8h.html#a6e21ccefdea3a53d5ec8f6aa2849bf8b
+interface btCollisionObjectArray {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1RayResultCallback.html
+[Prefix="btCollisionWorld::"]
+interface RayResultCallback {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1ConvexResultCallback.html
+[Prefix="btCollisionWorld::"]
+interface ConvexResultCallback {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1ContactResultCallback.html
+[Prefix="btCollisionWorld::"]
+interface ContactResultCallback {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtBroadphaseProxy.html
+interface btBroadphaseProxy {
+    long getUid();
+
+    void btBroadphaseProxy();
+
+    boolean isPolyhedral(long proxyType);
+    boolean isConvex(long proxyType);
+    boolean isNonMoving(long proxyType);
+    boolean isConcave(long proxyType);
+    boolean isCompound(long proxyType);
+    boolean isSoftBody(long proxyType);
+    boolean isInfinite(long proxyType);
+    boolean isConvex2d(long proxyType);
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionObject.html
 interface btCollisionObject {
     boolean mergesSimulationIslands();
 
@@ -56,8 +116,8 @@ interface btCollisionObject {
     [Ref, Const] btTransform getWorldTransform();
     void setWorldTransform([Ref, Const] btTransform worldTrans);
 
-    // [Ref, Const] btBroadphaseProxy getBroadphaseHandle();
-    // void setBroadphaseHandle([Ref, Const] btBroadphaseProxy handle);
+    [Const] btBroadphaseProxy getBroadphaseHandle();
+    void setBroadphaseHandle([Const] btBroadphaseProxy handle);
 
     [Ref, Const] btTransform getInterpolationWorldTransform();
     void setInterpolationWorldTransform([Ref, Const] btTransform trans);
@@ -91,8 +151,69 @@ interface btCollisionObject {
     boolean checkCollideWith([Const] btCollisionObject co);
 };
 
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionWorld.html
 interface btCollisionWorld {
-    // TODO
+    void btCollisionWorld(
+        btDispatcher dispatcher,
+        btBroadphaseInterface broadphasePairCache,
+        btCollisionConfiguration collisionConfiguration
+    );
+
+    void setBroadphase(btBroadphaseInterface pairCache);
+    [Const] btBroadphaseInterface getBroadphase();
+    // [Const] btOverlappingPairCache getPairCache();
+    [Const] btDispatcher getDispatcher();
+
+    void updateSingleAabb(btCollisionObject colObj);
+    void updateAabbs();
+    void computeOverlappingPairs();
+
+    // void setDebugDrawer(btIDebugDraw debugDrawer);
+    // btIDebugDraw getDebugDrawer();
+
+    void debugDrawWorld();
+    void debugDrawObject(
+        [Ref, Const] btTransform worldTransform,
+        [Const] btCollisionShape shape,
+        [Ref, Const] btVector3 color
+    );
+
+    long getNumCollisionObjects();
+    void rayTest (
+        [Ref, Const] btVector3 rayFromWorld,
+        [Ref, Const] btVector3 rayToWorld,
+        [Ref] RayResultCallback resultCallback
+    );
+    void convexSweepTest(
+        [Const] btConvexShape castShape,
+        [Ref, Const] btTransform from,
+        [Ref, Const] btTransform to,
+        [Ref] ConvexResultCallback resultCallback,
+        float allowedCcdPenetration
+    );
+
+    void contactTest(
+        btCollisionObject colObj,
+        [Ref] ContactResultCallback resultCallback
+    );
+    void contactPairTest(
+        btCollisionObject colObjA,
+        btCollisionObject colObjB,
+        [Ref] ContactResultCallback resultCallback
+    );
+    void addCollisionObject(
+        btCollisionObject collisionObject,
+        long collisionFilterGroup,
+        long collisionFilterMask
+    );
+
+    [Ref, Const] btCollisionObjectArray getCollisionObjectArray();
+    void removeCollisionObject(btCollisionObject collisionObject);
+    void performDiscreteCollisionDetection();
+
+    [Ref, Const] btDispatcherInfo getDispatchInfo();
+    boolean getForceUpdateAllAabbs();
+    void setForceUpdateAllAabbs(boolean forceUpdateAllAabbs);
 };
 
 ///// Broadphase Collision /////
