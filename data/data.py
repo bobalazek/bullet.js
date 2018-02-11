@@ -2,10 +2,10 @@ import os
 
 def get_bullet_includes(BULLET_DIRECTORY):
     return [
-        # General
+        ##### General
         os.path.join(BULLET_DIRECTORY, 'src', 'btBulletCollisionCommon.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'btBulletDynamicsCommon.h'),
-        # Linear Math
+        ##### Linear Math
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btVector3.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuadWord.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuaternion.h'),
@@ -14,7 +14,16 @@ def get_bullet_includes(BULLET_DIRECTORY):
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btMotionState.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath',
                      'btDefaultMotionState.h'),
-        # Bullet Collision
+        ##### Bullet Collision
+        ### Collision Dispatch
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btCollisionObject.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btCollisionWorld.h'),
+        ### Broadphase Collision
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'BroadphaseCollision', 'btDbvt.h'),
+        ### Collision Shapes
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'CollisionShapes', 'btCollisionShape.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',

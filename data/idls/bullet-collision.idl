@@ -5,6 +5,125 @@ interface btTriangleCallback {
     void processTriangle(btVector3 triangle, long partId, long trinagleIndex);
 };
 
+///// Collision Dispatch /////
+
+interface btCollisionObject {
+    boolean mergesSimulationIslands();
+
+    [Ref, Const] btVector3 getAnisotropicFriction();
+    void setAnisotropicFriction([Ref, Const] btVector3 anisotropicFriction, long frictionMode);
+    boolean hasAnisotropicFriction(long frictionMode);
+
+    void setContactProcessingThreshold(float contactProcessingThreshold);
+    float getContactProcessingThreshold();
+
+    boolean isStaticObject();
+    boolean isKinematicObject();
+    boolean isStaticOrKinematicObject();
+    boolean hasContactResponse();
+
+    void btCollisionObject();
+
+    void setCollisionShape(btCollisionShape collisionShape);
+    [Const] btCollisionShape getCollisionShape();
+
+    void setIgnoreCollisionCheck ([Const] btCollisionObject co, boolean ignoreCollisionCheck);
+    boolean checkCollideWithOverride([Const] btCollisionObject co);
+
+    any internalGetExtensionPointer();
+    void internalSetExtensionPointer(any pointer);
+
+    long getActivationState();
+    void setActivationState(long newState);
+    void setDeactivationTime(float time);
+    float getDeactivationTime();
+
+    void forceActivationState(long newState);
+    void activate(boolean forceActivation);
+    boolean isActive();
+
+    void setRestitution(float rest);
+    float getRestitution();
+
+    void setFriction(float frict);
+    float getFriction();
+
+    void setRollingFriction(float frict);
+    float getRollingFriction();
+
+    long getInternalType();
+
+    [Ref, Const] btTransform getWorldTransform();
+    void setWorldTransform([Ref, Const] btTransform worldTrans);
+
+    // [Ref, Const] btBroadphaseProxy getBroadphaseHandle();
+    // void setBroadphaseHandle([Ref, Const] btBroadphaseProxy handle);
+
+    [Ref, Const] btTransform getInterpolationWorldTransform();
+    void setInterpolationWorldTransform([Ref, Const] btTransform trans);
+
+    void setInterpolationLinearVelocity([Ref, Const] btVector3 linvel);
+    void setInterpolationAngularVelocity([Ref, Const] btVector3 angvel);
+    [Ref, Const] btVector3 getInterpolationLinearVelocity();
+    [Ref, Const] btVector3 getInterpolationAngularVelocity();
+
+    long getIslandTag();
+    void setIslandTag(long tag);
+
+    long getCompanionId();
+    void setCompanionId(long id);
+
+    float getHitFraction();
+    void setHitFraction(float hitFraction);
+
+    long getCollisionFlags();
+    void setCollisionFlags(long flags);
+
+    float getCcdSweptSphereRadius();
+    void setCcdSweptSphereRadius(float radius);
+
+    float getCcdMotionThreshold();
+    float getCcdSquareMotionThreshold();
+    void setCcdMotionThreshold(float ccdMotionThreshold);
+
+    long getUpdateRevisionInternal();
+
+    boolean checkCollideWith([Const] btCollisionObject co);
+};
+
+interface btCollisionWorld {
+    // TODO
+};
+
+///// Broadphase Collision /////
+
+interface btDbvtVolume {};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtDbvtNode.html
+interface btDbvtNode {
+    boolean isleaf();
+    boolean isinternal();
+    [Value] attribute btDbvtVolume volume;
+    // [Value] attribute btDbvtNode parent;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtDbvt.html
+interface btDbvt {
+    void clear();
+    boolean empty();
+    void optimizeBottomUp();
+    void optimizeTopDown(long bu_treshold);
+    void optimizeIncremental(long passes);
+
+    btDbvtNode insert([Ref, Const] btDbvtVolume box, any data);
+    // void update(btDbvtNode leaf, long lookahead);
+    void update(btDbvtNode leaf, [Ref] btDbvtVolume volume);
+    void update(btDbvtNode leaf, [Ref] btDbvtVolume volume, [Ref, Const] btVector3 velocity, float margin);
+    void update(btDbvtNode leaf, [Ref] btDbvtVolume volume, [Ref, Const] btVector3 velocity);
+    // void update(btDbvtNode leaf, [Ref] btDbvtVolume volume, float margin);
+    void remove(btDbvtNode leaf);
+};
+
 ///// Shapes /////
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionShape.html
@@ -73,7 +192,7 @@ interface btCompoundShape {
 
     [Const] DOMString getName();
 
-    // [Const] btDbvt getDynamicAabbTree();
+    [Const] btDbvt getDynamicAabbTree();
 
     void createAabbTreeFromChildren();
     // void calculatePrincipalAxisTransform(float masses, [Ref] btTransform principal, [Ref] btVector3 inertia);
