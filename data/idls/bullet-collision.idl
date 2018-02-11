@@ -1,3 +1,10 @@
+///// General /////
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtTriangleCallback.html
+interface btTriangleCallback {
+    void processTriangle(btVector3 triangle, long partId, long trinagleIndex);
+};
+
 ///// Shapes /////
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionShape.html
@@ -38,3 +45,82 @@ interface btCollisionShape {
     void setMargin(float margin);
     float getMargin();
 };
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCompoundShape.html
+interface btCompoundShape {
+    void btCompoundShape(boolean enableDynamicAabbTree, long initialChildCapacity);
+
+    void addChildShape([Ref, Const] btTransform localTransform, btCollisionShape shape);
+    void removeChildShape(btCollisionShape shape);
+    void removeChildShapeByIndex(long childShapeIndex);
+
+    [Const] btCollisionShape getChildShape(long index);
+    [Const, Ref] btTransform getChildTransform(long index);
+    void updateChildTransform(long childIndex, [Ref, Const] btTransform newChildTransform, boolean shouldRecalculateLocalAabb);
+
+    // btCompoundShapeChild getChildList();
+
+    void getAabb([Ref, Const] btTransform t, [Ref] btVector3 aabbMin, [Ref] btVector3 aabbMax);
+    void recalculateLocalAabb();
+
+    void setLocalScaling([Ref, Const] btVector3 scaling);
+    [Ref, Const] btVector3 getLocalScaling();
+
+    void calculateLocalInertia(float mass, [Ref] btVector3 inertia);
+
+    void setMargin(float margin);
+    float getMargin();
+
+    [Const] DOMString getName();
+
+    // [Const] btDbvt getDynamicAabbTree();
+
+    void createAabbTreeFromChildren();
+    // void calculatePrincipalAxisTransform(float masses, [Ref] btTransform principal, [Ref] btVector3 inertia);
+
+    long getUpdateRevision();
+};
+btCompoundShape implements btCollisionShape;
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtConcaveShape.html
+interface btConcaveShape {
+    void processAllTriangles(btTriangleCallback callback, [Ref, Const] btVector3 aabbMin, [Ref, Const] btVector3 aabbMax);
+    float getMargin();
+    void setMargin(float margin);
+};
+btConcaveShape implements btCollisionShape;
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtConvexShape.html
+interface btConvexShape {
+    [Value] btVector3 localGetSupportingVertex([Ref, Const] btVector3 vec);
+    [Value] btVector3 localGetSupportingVertexWithoutMargin([Ref, Const] btVector3 vec);
+    [Value] btVector3 localGetSupportVertexWithoutMarginNonVirtual([Ref, Const] btVector3 vec);
+    [Value] btVector3 localGetSupportVertexNonVirtual([Ref, Const] btVector3 vec);
+
+    float getMarginNonVirtual();
+
+    void getAabbNonVirtual([Ref, Const] btTransform t, [Ref] btVector3 aabbMin, [Ref] btVector3 aabbMax);
+    void project(
+        [Ref, Const] btTransform trans,
+        [Ref, Const] btVector3 dir,
+        float minProj, float maxProj,
+        [Ref] btVector3 witnesPtMin,
+        [Ref] btVector3 witnesPtMax
+    );
+    void batchedUnitVectorGetSupportingVertexWithoutMargin(
+        [Const] btVector3 vectors,
+        btVector3 supportVerticesOut,
+        long numVectors
+    );
+    void getAabb([Ref, Const] btTransform t, [Ref] btVector3 aabbMin, [Ref] btVector3 aabbMax);
+    void getAabbSlow([Ref, Const] btTransform t, [Ref] btVector3 aabbMin, [Ref] btVector3 aabbMax);
+    void setLocalScaling([Ref, Const] btVector3 scaling);
+    [Ref, Const] btVector3 getLocalScaling();
+
+    float getMargin();
+    void setMargin(float margin);
+
+    long getNumPreferredPenetrationDirections();
+    void getPreferredPenetrationDirection(long index, [Ref] btVector3 penetrationVector);
+};
+btConvexShape implements btCollisionShape;
