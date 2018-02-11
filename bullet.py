@@ -4,6 +4,7 @@ import os, sys, subprocess, argparse, pathlib
 import requests
 from io import BytesIO
 from zipfile import ZipFile
+from data.data import get_bullet_includes, get_idl_file_paths
 
 ########## Emscripten ##########
 exec(open(os.path.expanduser('~/.emscripten'), 'r').read())
@@ -23,65 +24,15 @@ ROOT = os.path.dirname(os.path.realpath(__file__))
 THIRD_PARTY_DIR = os.path.join(ROOT, 'third_party')
 BUILD_FILE_NAME = 'bullet.js'
 BUILD_FILE_PATH = os.path.join(ROOT, 'build', BUILD_FILE_NAME)
+IDL_FILE_PATH = os.path.join(ROOT, 'bindings.idl')
+IDL_FILE_PATHS = get_idl_file_paths(ROOT)
 
 ##### Bullet #####
 BULLET_VERSION = '2.87'
 BULLET_DIRECTORY = os.path.join(THIRD_PARTY_DIR, 'bullet3-' + BULLET_VERSION)
 BULLET_ZIP_FILE_NAME = BULLET_VERSION + '.zip'
 BULLET_ZIP_URL = 'https://github.com/bulletphysics/bullet3/archive/' + BULLET_ZIP_FILE_NAME
-BULLET_INCLUDES = []
-
-# Populate the bullet includes
-BULLET_INCLUDES = [
-    # General
-    os.path.join(BULLET_DIRECTORY, 'src', 'btBulletCollisionCommon.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'btBulletDynamicsCommon.h'),
-    # Linear Math
-    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btVector3.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuadWord.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuaternion.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btMatrix3x3.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btTransform.h'),
-    # Collision
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btCollisionShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btBoxShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btSphereShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btCapsuleShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btCylinderShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btConeShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btStaticPlaneShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btConvexHullShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btTriangleMesh.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btConvexTriangleMeshShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btBvhTriangleMeshShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btScaledBvhTriangleMeshShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btTriangleMeshShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btTriangleIndexVertexArray.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btCompoundShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btTetrahedronShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btEmptyShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btMultiSphereShape.h'),
-    os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                 'CollisionShapes', 'btUniformScalingShape.h'),
-]
+BULLET_INCLUDES = get_bullet_includes(BULLET_DIRECTORY)
 
 ########## Arguments ##########
 argument_parser = argparse.ArgumentParser(description='Bullet.js')
@@ -124,10 +75,21 @@ def build():
     print('========== Starting the build ... ==========')
 
     ##### Bindings #####
+    idl_file_content = ''
+    for include in IDL_FILE_PATHS:
+        idl_file_content += '////////// ' + \
+            include.replace(ROOT, '').lstrip(' \\/\t\n\r') + \
+            ' //////////'
+        idl_file_content += '\n\n'
+        idl_file_content += open(include).read()
+        idl_file_content += '\n\n\n\n'
+
+    open(IDL_FILE_PATH, 'w').write(idl_file_content)
+
     emscripten_binder_args = [
         emscripten.PYTHON,
         os.path.join(EMSCRIPTEN_ROOT, 'tools', 'webidl_binder.py'),
-        os.path.join(ROOT, 'bullet.idl'),
+        IDL_FILE_PATH,
         'glue'
     ]
 
@@ -163,9 +125,9 @@ def build():
     emscripten.Building.emcc(
         'glue.cpp', emscripten_args, BUILD_FILE_PATH)
 
-    BUILD_CONTENT = '// Bullet.js is a port of C++ Bullet3 Physics (zlib licensed).\n'
-    BUILD_CONTENT += open(BUILD_FILE_PATH).read()
-    open(BUILD_FILE_PATH, 'w').write(BUILD_CONTENT)
+    build_content = '// Bullet.js is a port of C++ Bullet3 Physics (zlib licensed).\n'
+    build_content += open(BUILD_FILE_PATH).read()
+    open(BUILD_FILE_PATH, 'w').write(build_content)
 
     print('========== Build completed! ==========')
 

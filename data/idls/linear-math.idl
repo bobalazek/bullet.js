@@ -1,5 +1,3 @@
-////////// Linear Math //////////
-
 ///// Vectors /////
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtVector3.html
@@ -213,45 +211,18 @@ interface btTransform {
     [Ref, Const] btTransform getIdentity();
 };
 
-////////// Collision //////////
-
-///// Shapes /////
-
-// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionShape.html
-interface btCollisionShape {
-    void getAabb([Ref, Const] btTransform t, [Ref] btVector3 aabbMin, [Ref] btVector3 aabbMax);
-    void getBoundingSphere([Ref] btVector3 center, float radius);
-    float getAngularMotionDisc();
-    float getContactBreakingThreshold(float defaultContactThresholdFactor);
-
-    void calculateTemporalAabb(
-        [Ref, Const] btTransform curTrans,
-        [Ref, Const] btVector3 linvel,
-        [Ref, Const] btVector3 angvel,
-        float timeStep,
-        [Ref] btVector3 temporalAabbMin,
-        [Ref] btVector3 temporalAabbMax
-    );
-
-    boolean isPolyhedral();
-    boolean isConvex2d();
-    boolean isConvex();
-    boolean isNonMoving();
-    boolean isConcave();
-    boolean isCompound();
-    boolean isSoftBody();
-    boolean isInfinite();
-
-    void setLocalScaling([Ref] btVector3 scaling);
-    [Const, Ref] btVector3 getLocalScaling();
-
-    void calculateLocalInertia(float mass, [Ref] btVector3 inertia);
-
-    [Const] DOMString getName();
-    long getShapeType();
-
-    [Value] btVector3 getAnisotropicRollingFrictionDirection();
-
-    void setMargin(float margin);
-    float getMargin();
+// http://bulletphysics.org/Bullet/BulletFull/classbtMotionState.html
+interface btMotionState {
+    void getWorldTransform([Ref] btTransform worldTrans);
+    void setWorldTransform([Ref] btTransform worldTrans);
 };
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtDefaultMotionState.html
+interface btDefaultMotionState {
+  void btDefaultMotionState([Ref] btTransform startTrans, [Ref] btTransform centerOfMassOffset);
+
+  [Value] attribute btTransform m_graphicsWorldTrans;
+  [Value] attribute btTransform m_centerOfMassOffset;
+  [Value] attribute btTransform m_startWorldTrans;
+};
+btDefaultMotionState implements btMotionState;

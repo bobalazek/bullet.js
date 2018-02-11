@@ -3,3 +3,4 @@ glue.*
 *.out
 *.pkl
 third_party/*
+/bindings.idl
