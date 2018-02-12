@@ -1,0 +1,45 @@
+// http://bulletphysics.org/Bullet/BulletFull/structbtDbvt.html
+interface btDbvtVolume {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtBroadphaseProxy.html
+interface btBroadphaseProxy {
+    void btBroadphaseProxy();
+
+    long getUid();
+
+    boolean isPolyhedral(long proxyType);
+    boolean isConvex(long proxyType);
+    boolean isNonMoving(long proxyType);
+    boolean isConcave(long proxyType);
+    boolean isCompound(long proxyType);
+    boolean isSoftBody(long proxyType);
+    boolean isInfinite(long proxyType);
+    boolean isConvex2d(long proxyType);
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtDbvtNode.html
+interface btDbvtNode {
+    boolean isleaf();
+    boolean isinternal();
+    [Value] attribute btDbvtVolume volume;
+    // [Value] attribute btDbvtNode parent;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtDbvt.html
+interface btDbvt {
+    void clear();
+    boolean empty();
+    void optimizeBottomUp();
+    void optimizeTopDown(long bu_treshold);
+    void optimizeIncremental(long passes);
+
+    btDbvtNode insert([Ref, Const] btDbvtVolume box, any data);
+    // void update(btDbvtNode leaf, long lookahead);
+    void update(btDbvtNode leaf, [Ref] btDbvtVolume volume);
+    void update(btDbvtNode leaf, [Ref] btDbvtVolume volume, [Ref, Const] btVector3 velocity, float margin);
+    void update(btDbvtNode leaf, [Ref] btDbvtVolume volume, [Ref, Const] btVector3 velocity);
+    // void update(btDbvtNode leaf, [Ref] btDbvtVolume volume, float margin);
+    void remove(btDbvtNode leaf);
+};

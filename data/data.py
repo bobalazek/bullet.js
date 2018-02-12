@@ -83,6 +83,13 @@ def get_bullet_includes(BULLET_DIRECTORY):
 
 def get_idl_file_paths(ROOT):
     return [
-        os.path.join(ROOT, 'data', 'idls', 'linear-math.idl'),
-        os.path.join(ROOT, 'data', 'idls', 'bullet-collision.idl'),
+        os.path.join(ROOT, 'data', 'idls', 'LinearMath.idl'),
+        os.path.join(ROOT, 'data', 'idls', 'BulletCollision',
+                     'CollisionDispatch.idl'),
+        os.path.join(ROOT, 'data', 'idls', 'BulletCollision',
+                     'CollisionShapes.idl'),
+        os.path.join(ROOT, 'data', 'idls', 'BulletCollision',
+                     'BroadphaseCollision.idl'),
+        os.path.join(ROOT, 'data', 'idls', 'BulletCollision',
+                     'NarrowPhaseCollision.idl'),
     ]

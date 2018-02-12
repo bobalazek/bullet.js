@@ -1,0 +1,238 @@
+// http://bulletphysics.org/Bullet/BulletFull/classbtDispatcher.html
+interface btDispatcher {
+    long getNumManifolds();
+
+    [Const] btPoolAllocator getInternalManifoldPool();
+
+    any allocateCollisionAlgorithm(long size);
+    void freeCollisionAlgorithm(any ptr);
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtBroadphaseInterface.html
+interface btBroadphaseInterface {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionConfiguration.html
+interface btCollisionConfiguration {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtDispatcherInfo.html
+interface btDispatcherInfo {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/btCollisionObject_8h.html#a6e21ccefdea3a53d5ec8f6aa2849bf8b
+interface btCollisionObjectArray {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1RayResultCallback.html
+[Prefix="btCollisionWorld::"]
+interface RayResultCallback {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1ConvexResultCallback.html
+[Prefix="btCollisionWorld::"]
+interface ConvexResultCallback {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1ContactResultCallback.html
+[Prefix="btCollisionWorld::"]
+interface ContactResultCallback {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtDefaultCollisionConstructionInfo.html
+interface btDefaultCollisionConstructionInfo {
+    void btDefaultCollisionConstructionInfo();
+
+    attribute btPoolAllocator m_persistentManifoldPool;
+    attribute btPoolAllocator m_collisionAlgorithmPool;
+    attribute long 	m_defaultMaxPersistentManifoldPoolSize;
+    attribute long 	m_defaultMaxCollisionAlgorithmPoolSize;
+    attribute long 	m_customCollisionAlgorithmMaxElementSize;
+    attribute long 	m_useEpaPenetrationAlgorithm;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtDefaultCollisionConfiguration.html
+interface btDefaultCollisionConfiguration  {
+    void btDefaultCollisionConfiguration([Ref, Const] btDefaultCollisionConstructionInfo constructionInfo);
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionObject.html
+interface btCollisionObject {
+    boolean mergesSimulationIslands();
+
+    [Ref, Const] btVector3 getAnisotropicFriction();
+    void setAnisotropicFriction([Ref, Const] btVector3 anisotropicFriction, long frictionMode);
+    boolean hasAnisotropicFriction(long frictionMode);
+
+    void setContactProcessingThreshold(float contactProcessingThreshold);
+    float getContactProcessingThreshold();
+
+    boolean isStaticObject();
+    boolean isKinematicObject();
+    boolean isStaticOrKinematicObject();
+    boolean hasContactResponse();
+
+    void btCollisionObject();
+
+    void setCollisionShape(btCollisionShape collisionShape);
+    [Const] btCollisionShape getCollisionShape();
+
+    void setIgnoreCollisionCheck ([Const] btCollisionObject co, boolean ignoreCollisionCheck);
+    boolean checkCollideWithOverride([Const] btCollisionObject co);
+
+    any internalGetExtensionPointer();
+    void internalSetExtensionPointer(any pointer);
+
+    long getActivationState();
+    void setActivationState(long newState);
+    void setDeactivationTime(float time);
+    float getDeactivationTime();
+
+    void forceActivationState(long newState);
+    void activate(boolean forceActivation);
+    boolean isActive();
+
+    void setRestitution(float rest);
+    float getRestitution();
+
+    void setFriction(float frict);
+    float getFriction();
+
+    void setRollingFriction(float frict);
+    float getRollingFriction();
+
+    long getInternalType();
+
+    [Ref, Const] btTransform getWorldTransform();
+    void setWorldTransform([Ref, Const] btTransform worldTrans);
+
+    [Const] btBroadphaseProxy getBroadphaseHandle();
+    void setBroadphaseHandle([Const] btBroadphaseProxy handle);
+
+    [Ref, Const] btTransform getInterpolationWorldTransform();
+    void setInterpolationWorldTransform([Ref, Const] btTransform trans);
+
+    void setInterpolationLinearVelocity([Ref, Const] btVector3 linvel);
+    void setInterpolationAngularVelocity([Ref, Const] btVector3 angvel);
+    [Ref, Const] btVector3 getInterpolationLinearVelocity();
+    [Ref, Const] btVector3 getInterpolationAngularVelocity();
+
+    long getIslandTag();
+    void setIslandTag(long tag);
+
+    long getCompanionId();
+    void setCompanionId(long id);
+
+    float getHitFraction();
+    void setHitFraction(float hitFraction);
+
+    long getCollisionFlags();
+    void setCollisionFlags(long flags);
+
+    float getCcdSweptSphereRadius();
+    void setCcdSweptSphereRadius(float radius);
+
+    float getCcdMotionThreshold();
+    float getCcdSquareMotionThreshold();
+    void setCcdMotionThreshold(float ccdMotionThreshold);
+
+    long getUpdateRevisionInternal();
+
+    boolean checkCollideWith([Const] btCollisionObject co);
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionObjectWrapper.html
+// TODO: the "BT_DECLARE_STACK_ONLY_OBJECT" macro making issues
+// interface btCollisionObjectWrapper {
+    // void btCollisionObjectWrapper(
+    //     [Const] btCollisionObjectWrapper  parent,
+    //     [Const] btCollisionShape shape,
+    //     [Const] btCollisionObject collisionObject,
+    //     [Ref, Const] btTransform worldTransform,
+    //     long partId,
+    //     long index
+    // );
+
+    // [Ref, Const] btTransform getWorldTransform();
+    // [Const] btCollisionObject getCollisionObject();
+    // [Const] btCollisionShape getCollisionShape();
+
+    // [Const] attribute btCollisionObjectWrapper m_parent;
+    // [Const] attribute btCollisionShape m_shape;
+    // [Const] attribute btCollisionObject m_collisionObject;
+    // [Value] attribute btTransform m_worldTransform;
+    // attribute long m_partId;
+    // attribute long m_index;
+//};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionWorld.html
+interface btCollisionWorld {
+    void btCollisionWorld(
+        btDispatcher dispatcher,
+        btBroadphaseInterface broadphasePairCache,
+        btCollisionConfiguration collisionConfiguration
+    );
+
+    void setBroadphase(btBroadphaseInterface pairCache);
+    [Const] btBroadphaseInterface getBroadphase();
+    // [Const] btOverlappingPairCache getPairCache();
+    [Const] btDispatcher getDispatcher();
+
+    void updateSingleAabb(btCollisionObject colObj);
+    void updateAabbs();
+    void computeOverlappingPairs();
+
+    // void setDebugDrawer(btIDebugDraw debugDrawer);
+    // btIDebugDraw getDebugDrawer();
+
+    void debugDrawWorld();
+    void debugDrawObject(
+        [Ref, Const] btTransform worldTransform,
+        [Const] btCollisionShape shape,
+        [Ref, Const] btVector3 color
+    );
+
+    long getNumCollisionObjects();
+    void rayTest (
+        [Ref, Const] btVector3 rayFromWorld,
+        [Ref, Const] btVector3 rayToWorld,
+        [Ref] RayResultCallback resultCallback
+    );
+    void convexSweepTest(
+        [Const] btConvexShape castShape,
+        [Ref, Const] btTransform from,
+        [Ref, Const] btTransform to,
+        [Ref] ConvexResultCallback resultCallback,
+        float allowedCcdPenetration
+    );
+
+    void contactTest(
+        btCollisionObject colObj,
+        [Ref] ContactResultCallback resultCallback
+    );
+    void contactPairTest(
+        btCollisionObject colObjA,
+        btCollisionObject colObjB,
+        [Ref] ContactResultCallback resultCallback
+    );
+    void addCollisionObject(
+        btCollisionObject collisionObject,
+        long collisionFilterGroup,
+        long collisionFilterMask
+    );
+
+    [Ref, Const] btCollisionObjectArray getCollisionObjectArray();
+    void removeCollisionObject(btCollisionObject collisionObject);
+    void performDiscreteCollisionDetection();
+
+    [Ref, Const] btDispatcherInfo getDispatchInfo();
+    boolean getForceUpdateAllAabbs();
+    void setForceUpdateAllAabbs(boolean forceUpdateAllAabbs);
+};

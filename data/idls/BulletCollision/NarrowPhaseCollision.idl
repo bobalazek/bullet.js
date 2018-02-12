@@ -1,0 +1,66 @@
+// http://bulletphysics.org/Bullet/BulletFull/classbtManifoldPoint.html
+interface btManifoldPoint {
+    void btManifoldPoint();
+    void btManifoldPoint(
+        [Ref, Const] btVector3 pointA,
+        [Ref, Const] btVector3 pointB,
+        [Ref, Const] btVector3 normal,
+        float distance
+    );
+
+    float getDistance();
+    long getLifeTime();
+    [Ref, Const] btVector3 getPositionWorldOnA();
+    [Ref, Const] btVector3 getPositionWorldOnB();
+    void setDistance(float dist);
+    float getAppliedImpulse();
+
+    [Value] attribute btVector3 m_localPointA;
+    [Value] attribute btVector3 m_localPointB;
+    [Value] attribute btVector3 m_positionWorldOnB;
+    [Value] attribute btVector3 m_positionWorldOnA;
+    [Value] attribute btVector3 m_normalWorldOnB;
+    attribute float m_distance1;
+    attribute float m_combinedFriction;
+    attribute float m_combinedRollingFriction;
+    attribute float m_combinedRestitution;
+    attribute float m_partId0;
+    attribute float m_partId1;
+    attribute float m_index0;
+    attribute float m_index1;
+    attribute any m_userPersistentData;
+    attribute float m_appliedImpulse;
+    attribute float m_appliedImpulseLateral1;
+    attribute float m_appliedImpulseLateral2;
+    attribute float m_contactMotion1;
+    attribute float m_contactMotion2;
+    attribute float m_contactCFM;
+    attribute long m_lifeTime;
+    [Value] attribute btVector3 m_lateralFrictionDir1;
+    [Value] attribute btVector3 m_lateralFrictionDir2;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtPersistentManifold.html
+interface btPersistentManifold {
+    void btPersistentManifold();
+    void btPersistentManifold(
+        [Const] btCollisionObject body0,
+        [Const] btCollisionObject body1,
+        long someStrangeInt, // TODO: what is this? http://bulletphysics.org/Bullet/BulletFull/classbtPersistentManifold.html#adee3b3c0e4c92f7e406fdc1fcbdecb6a
+        float contactBreakingThreshold,
+        float contactProcessingThreshold
+    );
+
+    [Const] btCollisionObject getBody0();
+    [Const] btCollisionObject getBody1();
+
+    void setBodies(
+        [Const] btCollisionObject body0,
+        [Const] btCollisionObject body1
+    );
+
+    void clearUserCache([Ref] btManifoldPoint pt);
+
+    long getNumContacts();
+    void setNumContacts(long cachedPoints);
+};
