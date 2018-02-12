@@ -5,6 +5,7 @@ def get_bullet_includes(BULLET_DIRECTORY):
         ##### General
         os.path.join(BULLET_DIRECTORY, 'src', 'btBulletCollisionCommon.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'btBulletDynamicsCommon.h'),
+
         ##### Linear Math
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btVector3.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btQuadWord.h'),
@@ -13,16 +14,32 @@ def get_bullet_includes(BULLET_DIRECTORY):
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btTransform.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath', 'btMotionState.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath',
+                     'btPoolAllocator.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'LinearMath',
                      'btDefaultMotionState.h'),
+
         ##### Bullet Collision
+
         ### Collision Dispatch
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'CollisionDispatch', 'btCollisionObject.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btCollisionObjectWrapper.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'CollisionDispatch', 'btCollisionWorld.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btDefaultCollisionConfiguration.h'),
+
         ### Broadphase Collision
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'BroadphaseCollision', 'btDbvt.h'),
+
+        ### Narrow Phase Collision
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'NarrowPhaseCollision', 'btManifoldPoint.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'NarrowPhaseCollision', 'btPersistentManifold.h'),
+
         ### Collision Shapes
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'CollisionShapes', 'btCollisionShape.h'),

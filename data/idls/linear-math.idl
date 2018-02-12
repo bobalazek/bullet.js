@@ -226,3 +226,20 @@ interface btDefaultMotionState {
   [Value] attribute btTransform m_startWorldTrans;
 };
 btDefaultMotionState implements btMotionState;
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtPoolAllocator.html
+interface btPoolAllocator {
+    void btPoolAllocator(long elemSize, long maxElements);
+
+    long getFreeCount();
+    long getUsedCount();
+    long getMaxCount();
+
+    any allocate(long size);
+
+    boolean validPtr(any ptr);
+
+    void freeMemory(any ptr);
+
+    long getElementSize();
+};

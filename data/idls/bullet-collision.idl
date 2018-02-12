@@ -1,15 +1,13 @@
-///// General /////
-
-// http://bulletphysics.org/Bullet/BulletFull/classbtTriangleCallback.html
-interface btTriangleCallback {
-    void processTriangle(btVector3 triangle, long partId, long trinagleIndex);
-};
-
 ///// Collision Dispatch /////
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtDispatcher.html
 interface btDispatcher {
-    // TODO
+    long getNumManifolds();
+
+    [Const] btPoolAllocator getInternalManifoldPool();
+
+    any allocateCollisionAlgorithm(long size);
+    void freeCollisionAlgorithm(any ptr);
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtBroadphaseInterface.html
@@ -50,20 +48,21 @@ interface ContactResultCallback {
     // TODO
 };
 
-// http://bulletphysics.org/Bullet/BulletFull/structbtBroadphaseProxy.html
-interface btBroadphaseProxy {
-    long getUid();
+// http://bulletphysics.org/Bullet/BulletFull/structbtDefaultCollisionConstructionInfo.html
+interface btDefaultCollisionConstructionInfo {
+    void btDefaultCollisionConstructionInfo();
 
-    void btBroadphaseProxy();
+    attribute btPoolAllocator m_persistentManifoldPool;
+    attribute btPoolAllocator m_collisionAlgorithmPool;
+    attribute long 	m_defaultMaxPersistentManifoldPoolSize;
+    attribute long 	m_defaultMaxCollisionAlgorithmPoolSize;
+    attribute long 	m_customCollisionAlgorithmMaxElementSize;
+    attribute long 	m_useEpaPenetrationAlgorithm;
+};
 
-    boolean isPolyhedral(long proxyType);
-    boolean isConvex(long proxyType);
-    boolean isNonMoving(long proxyType);
-    boolean isConcave(long proxyType);
-    boolean isCompound(long proxyType);
-    boolean isSoftBody(long proxyType);
-    boolean isInfinite(long proxyType);
-    boolean isConvex2d(long proxyType);
+// http://bulletphysics.org/Bullet/BulletFull/classbtDefaultCollisionConfiguration.html
+interface btDefaultCollisionConfiguration  {
+    void btDefaultCollisionConfiguration([Ref, Const] btDefaultCollisionConstructionInfo constructionInfo);
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionObject.html
@@ -151,6 +150,30 @@ interface btCollisionObject {
     boolean checkCollideWith([Const] btCollisionObject co);
 };
 
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionObjectWrapper.html
+// TODO: the "BT_DECLARE_STACK_ONLY_OBJECT" macro making issues
+// interface btCollisionObjectWrapper {
+    // void btCollisionObjectWrapper(
+    //     [Const] btCollisionObjectWrapper  parent,
+    //     [Const] btCollisionShape shape,
+    //     [Const] btCollisionObject collisionObject,
+    //     [Ref, Const] btTransform worldTransform,
+    //     long partId,
+    //     long index
+    // );
+
+    // [Ref, Const] btTransform getWorldTransform();
+    // [Const] btCollisionObject getCollisionObject();
+    // [Const] btCollisionShape getCollisionShape();
+
+    // [Const] attribute btCollisionObjectWrapper m_parent;
+    // [Const] attribute btCollisionShape m_shape;
+    // [Const] attribute btCollisionObject m_collisionObject;
+    // [Value] attribute btTransform m_worldTransform;
+    // attribute long m_partId;
+    // attribute long m_index;
+//};
+
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionWorld.html
 interface btCollisionWorld {
     void btCollisionWorld(
@@ -216,9 +239,97 @@ interface btCollisionWorld {
     void setForceUpdateAllAabbs(boolean forceUpdateAllAabbs);
 };
 
+///// Narrow Phase Collision /////
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtManifoldPoint.html
+interface btManifoldPoint {
+    void btManifoldPoint();
+    void btManifoldPoint(
+        [Ref, Const] btVector3 pointA,
+        [Ref, Const] btVector3 pointB,
+        [Ref, Const] btVector3 normal,
+        float distance
+    );
+
+    float getDistance();
+    long getLifeTime();
+    [Ref, Const] btVector3 getPositionWorldOnA();
+    [Ref, Const] btVector3 getPositionWorldOnB();
+    void setDistance(float dist);
+    float getAppliedImpulse();
+
+    [Value] attribute btVector3 m_localPointA;
+    [Value] attribute btVector3 m_localPointB;
+    [Value] attribute btVector3 m_positionWorldOnB;
+    [Value] attribute btVector3 m_positionWorldOnA;
+    [Value] attribute btVector3 m_normalWorldOnB;
+    attribute float m_distance1;
+    attribute float m_combinedFriction;
+    attribute float m_combinedRollingFriction;
+    attribute float m_combinedRestitution;
+    attribute float m_partId0;
+    attribute float m_partId1;
+    attribute float m_index0;
+    attribute float m_index1;
+    attribute any m_userPersistentData;
+    attribute float m_appliedImpulse;
+    attribute float m_appliedImpulseLateral1;
+    attribute float m_appliedImpulseLateral2;
+    attribute float m_contactMotion1;
+    attribute float m_contactMotion2;
+    attribute float m_contactCFM;
+    attribute long m_lifeTime;
+    [Value] attribute btVector3 m_lateralFrictionDir1;
+    [Value] attribute btVector3 m_lateralFrictionDir2;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtPersistentManifold.html
+interface btPersistentManifold {
+    void btPersistentManifold();
+    void btPersistentManifold(
+        [Const] btCollisionObject body0,
+        [Const] btCollisionObject body1,
+        long someStrangeInt, // TODO: what is this? http://bulletphysics.org/Bullet/BulletFull/classbtPersistentManifold.html#adee3b3c0e4c92f7e406fdc1fcbdecb6a
+        float contactBreakingThreshold,
+        float contactProcessingThreshold
+    );
+
+    [Const] btCollisionObject getBody0();
+    [Const] btCollisionObject getBody1();
+
+    void setBodies(
+        [Const] btCollisionObject body0,
+        [Const] btCollisionObject body1
+    );
+
+    void clearUserCache([Ref] btManifoldPoint pt);
+
+    long getNumContacts();
+    void setNumContacts(long cachedPoints);
+};
+
 ///// Broadphase Collision /////
 
-interface btDbvtVolume {};
+// http://bulletphysics.org/Bullet/BulletFull/structbtDbvt.html
+interface btDbvtVolume {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtBroadphaseProxy.html
+interface btBroadphaseProxy {
+    void btBroadphaseProxy();
+
+    long getUid();
+
+    boolean isPolyhedral(long proxyType);
+    boolean isConvex(long proxyType);
+    boolean isNonMoving(long proxyType);
+    boolean isConcave(long proxyType);
+    boolean isCompound(long proxyType);
+    boolean isSoftBody(long proxyType);
+    boolean isInfinite(long proxyType);
+    boolean isConvex2d(long proxyType);
+};
 
 // http://bulletphysics.org/Bullet/BulletFull/structbtDbvtNode.html
 interface btDbvtNode {
@@ -246,6 +357,11 @@ interface btDbvt {
 };
 
 ///// Shapes /////
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtTriangleCallback.html
+interface btTriangleCallback {
+    void processTriangle(btVector3 triangle, long partId, long trinagleIndex);
+};
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionShape.html
 interface btCollisionShape {
