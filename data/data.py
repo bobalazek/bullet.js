@@ -22,6 +22,8 @@ def get_bullet_includes(BULLET_DIRECTORY):
 
         ### Broadphase Collision
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'BroadphaseCollision', 'btBroadphaseInterface.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'BroadphaseCollision', 'btBroadphaseProxy.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'BroadphaseCollision', 'btOverlappingPairCache.h'),
@@ -49,6 +51,8 @@ def get_bullet_includes(BULLET_DIRECTORY):
                      'CollisionDispatch', 'btCollisionConfiguration.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'CollisionDispatch', 'btDefaultCollisionConfiguration.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btManifoldResult.h'),
 
         ### Collision Shapes
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',

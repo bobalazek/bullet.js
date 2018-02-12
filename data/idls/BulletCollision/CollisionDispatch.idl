@@ -97,50 +97,289 @@ interface btVoronoiSimplexSolver {
 
 // http://bulletphysics.org/Bullet/BulletFull/structbtUsageBitfield.html
 interface btUsageBitfield {
-    // TODO
+    void btUsageBitfield();
+
+    void reset();
+
+    attribute unsigned short usedVertexA;
+    attribute unsigned short usedVertexB;
+    attribute unsigned short usedVertexC;
+    attribute unsigned short usedVertexD;
+    attribute unsigned short unused1;
+    attribute unsigned short unused2;
+    attribute unsigned short unused3;
+    attribute unsigned short unused4;
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/structbtSubSimplexClosestResult.html
 interface btSubSimplexClosestResult  {
-    // TODO
+    void btSubSimplexClosestResult();
+
+    void reset();
+    boolean isValid();
+    void setBarycentricCoordinates(
+        float a,
+        float b,
+        float c,
+        float d
+    );
+
+    [Value] attribute btVector3 m_closestPointOnSimplex;
+    [Value] attribute btUsageBitfield m_usedVertices;
+    // [Value] attribute float m_barycentricCoords; // array of floats? Possible?
+    attribute boolean m_degenerate;
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionAlgorithm.html
 interface btCollisionAlgorithm {
-    // TODO
+    // void btCollisionAlgorithm();
+    // void btCollisionAlgorithm([Ref, Const] btCollisionAlgorithmConstructionInfo ci);
+
+    // void processCollision(
+    //     btCollisionObjectWrapper body0Wrap,
+    //     btCollisionObjectWrapper body1Wrap,
+    //     [Ref, Const] btDispatcherInfo dispatchInfo,
+    //     btManifoldResult resultOut
+    // );
+
+    float calculateTimeOfImpact(
+        btCollisionObject body0,
+        btCollisionObject body1,
+        [Ref, Const] btDispatcherInfo dispatchInfo,
+        btManifoldResult resultOut
+    );
+
+    void getAllContactManifolds([Ref] btManifoldArray manifoldArray);
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionAlgorithmConstructionInfo.html
+interface btCollisionAlgorithmConstructionInfo {
+    void btCollisionAlgorithmConstructionInfo();
+    void btCollisionAlgorithmConstructionInfo(btDispatcher dispatcher, long temp);
+
+    attribute btDispatcher m_dispatcher1;
+    attribute btPersistentManifold m_manifold;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/btCollisionAlgorithm_8h.html#aa5a8e58a0ce241d094fa5552fc70f5b8
+interface btManifoldArray {};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtManifoldResult.html
+interface btManifoldResult {
+    void btManifoldResult();
+    // void btManifoldResult(
+    //     btCollisionObjectWrapper body0Wrap,
+    //     btCollisionObjectWrapper body1Wrap
+    // );
+
+    void setPersistentManifold(btPersistentManifold manifoldPtr);
+    [Const] btPersistentManifold getPersistentManifold();
+
+    void setShapeIdentifiersA(long partId0, long index0);
+    void setShapeIdentifiersB(long partId1, long index1);
+
+    void addContactPoint(
+        [Ref, Const] btVector3 normalOnBInWorld,
+        [Ref, Const] btVector3 pointInWorld,
+        float depth
+    );
+
+    void refreshContactPoints();
+
+    // [Const] btCollisionObjectWrapper getBody0Wrap();
+    // [Const] btCollisionObjectWrapper getBody1Wrap();
+    // void setBody0Wrap([Const] btCollisionObjectWrapper obj0Wrap);
+    // void setBody1Wrap([Const] btCollisionObjectWrapper obj1Wrap);
+
+    [Const] btCollisionObject getBody0Internal();
+    [Const] btCollisionObject getBody1Internal();
+
+    float calculateCombinedRestitution(
+        [Const] btCollisionObject body0,
+        [Const] btCollisionObject body1
+    );
+    float calculateCombinedFriction(
+        [Const] btCollisionObject body0,
+        [Const] btCollisionObject body1
+    );
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtBroadphaseInterface.html
 interface btBroadphaseInterface {
-    // TODO
+    btBroadphaseProxy createProxy(
+        [Ref, Const] btVector3 aabbMin,
+        [Ref, Const] btVector3 aabbMax,
+        long shapeType,
+        any userPtr,
+        long collisionFilterGroup,
+        long collisionFilterMask,
+        btDispatcher dispatcher
+    );
+    void destroyProxy(
+        btBroadphaseProxy proxy,
+        btDispatcher dispatcher
+    );
+
+    void setAabb(
+        btBroadphaseProxy proxy,
+        [Ref, Const] btVector3 aabbMin,
+        [Ref, Const] btVector3 aabbMax,
+        btDispatcher dispatcher
+    );
+    void getAabb(
+        btBroadphaseProxy proxy,
+        [Ref, Const] btVector3 aabbMin,
+        [Ref, Const] btVector3 aabbMax
+    );
+    void rayTest (
+        [Ref, Const] btVector3 rayFrom,
+        [Ref, Const] btVector3 rayTo,
+        [Ref] btBroadphaseRayCallback rayCallback,
+        [Ref, Const] btVector3 aabbMin,
+        [Ref, Const] btVector3 aabbMax
+    );
+    void aabbTest (
+        [Ref, Const] btVector3 aabbMin,
+        [Ref, Const] btVector3 aabbMax,
+        [Ref] btBroadphaseAabbCallback callback
+    );
+
+    void calculateOverlappingPairs(btDispatcher dispatcher);
+
+    [Const] btOverlappingPairCache getOverlappingPairCache();
+
+    void getBroadphaseAabb([Ref] btVector3 aabbMin, [Ref] btVector3 aabbMax);
+
+    void resetPool(btDispatcher dispatcher);
+
+    void printStats();
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/structbtDispatcherInfo.html
 interface btDispatcherInfo {
-    // TODO
+    void btDispatcherInfo();
+
+    attribute float m_timeStep;
+    attribute long m_stepCount;
+    attribute long m_dispatchFunc;
+    attribute float m_timeOfImpact;
+    attribute boolean m_useContinuous;
+    // [Const] attribute btIDebugDraw m_debugDraw;
+    attribute boolean m_enableSatConvex;
+    attribute boolean m_enableSPU;
+    attribute boolean m_useEpa;
+    attribute float m_allowedCcdPenetration;
+    attribute boolean m_useConvexConservativeDistanceUtil;
+    attribute float m_convexConservativeDistanceThreshold;
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/btCollisionObject_8h.html#a6e21ccefdea3a53d5ec8f6aa2849bf8b
-interface btCollisionObjectArray {
-    // TODO
+interface btCollisionObjectArray {};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtBroadphaseAabbCallback.html
+interface btBroadphaseAabbCallback {
+    boolean process([Const] btBroadphaseProxy proxy);
 };
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtBroadphaseRayCallback.html
+interface btBroadphaseRayCallback {
+    [Value] attribute btVector3 m_rayDirectionInverse;
+    // attribute long m_signs;
+    attribute float m_lambda_max;
+};
+btBroadphaseRayCallback implements btBroadphaseAabbCallback;
 
 // http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1RayResultCallback.html
 [Prefix="btCollisionWorld::"]
 interface RayResultCallback {
-    // TODO
+    boolean hasHit();
+
+    boolean needsCollision(btBroadphaseProxy proxy0);
+    float addSingleResult(
+        [Ref] LocalRayResult rayResult,
+        boolean normalInWorldSpace
+    );
+
+    attribute float m_closestHitFraction;
+    [Const] attribute btCollisionObject m_collisionObject;
+    attribute long m_collisionFilterGroup;
+    attribute long m_collisionFilterMask;
+    attribute long m_flags;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1LocalRayResult.html
+[Prefix="btCollisionWorld::"]
+interface LocalRayResult {
+ 	void LocalRayResult (
+        [Const] btCollisionObject collisionObject,
+        LocalShapeInfo localShapeInfo,
+        [Ref, Const] btVector3 hitNormalLocal,
+        float hitFraction
+    );
+
+    [Const] attribute btCollisionObject m_collisionObject;
+    [Const] attribute LocalShapeInfo m_localShapeInfo;
+    [Value, Const] attribute btVector3 m_hitNormalLocal;
+    [Const] attribute float m_hitFraction;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1LocalShapeInfo.html
+[Prefix="btCollisionWorld::"]
+interface LocalShapeInfo {
+    attribute long m_shapePart;
+    attribute long m_triangleIndex;
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1ConvexResultCallback.html
 [Prefix="btCollisionWorld::"]
 interface ConvexResultCallback {
-    // TODO
+    boolean hasHit();
+
+    boolean needsCollision(btBroadphaseProxy proxy0);
+    float addSingleResult(
+        [Ref] LocalConvexResult convexResult,
+        boolean normalInWorldSpace
+    );
+
+    attribute float m_closestHitFraction;
+    attribute long m_collisionFilterGroup;
+    attribute long m_collisionFilterMask;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1LocalConvexResult.html
+[Prefix="btCollisionWorld::"]
+interface LocalConvexResult  {
+ 	void LocalConvexResult (
+        [Const] btCollisionObject collisionObject,
+        LocalShapeInfo localShapeInfo,
+        [Ref, Const] btVector3 hitNormalLocal,
+        [Ref, Const] btVector3 hitPointLocal,
+        float hitFraction
+    );
+
+    [Const] attribute btCollisionObject m_hitCollisionObject;
+    attribute LocalShapeInfo m_localShapeInfo;
+    [Value] attribute btVector3 m_hitNormalLocal;
+    [Value] attribute btVector3 m_hitPointLocal;
+    attribute float m_hitFraction;
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/structbtCollisionWorld_1_1ContactResultCallback.html
 [Prefix="btCollisionWorld::"]
 interface ContactResultCallback {
-    // TODO
+    // void ContactResultCallback();
+
+    boolean needsCollision(btBroadphaseProxy proxy0);
+    // float addSingleResult(
+    //     [Ref] btManifoldPoint cp,
+    //     [Const] btCollisionObjectWrapper colObj0Wrap,
+    //     [Const] btCollisionObjectWrapper colObj1Wrap,
+    //     long partId1,
+    //     long index1
+    // );
+
+    attribute long m_collisionFilterGroup;
+    attribute long m_collisionFilterMask;
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/structbtDefaultCollisionConstructionInfo.html
