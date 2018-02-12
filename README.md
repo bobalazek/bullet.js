@@ -13,12 +13,13 @@ A JS port of the C++ [Bullet3](https://github.com/bulletphysics/bullet3) physics
 
 ## Setup
 
-* Run `python bullet.py setup`
+* Run `pip3 install -r requirements.txt`
+* Run `python3 bullet.py setup`
 
 
 ## Build
 
-* Run `python bullet.py build`
+* Run `python3 bullet.py build`
 
 
 ## Development

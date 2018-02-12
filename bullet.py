@@ -7,7 +7,12 @@ from zipfile import ZipFile
 from data.data import get_bullet_includes, get_idl_file_paths
 
 ########## Emscripten ##########
-exec(open(os.path.expanduser('~/.emscripten'), 'r').read())
+EMSCRIPTEN_USER_FILE = os.path.expanduser('~/.emscripten')
+if not os.path.isfile(EMSCRIPTEN_USER_FILE):
+    print('EMSCRIPTEN not found. Please install it first.')
+    sys.exit(1)
+
+exec(open(EMSCRIPTEN_USER_FILE, 'r').read())
 
 try:
     EMSCRIPTEN_ROOT
