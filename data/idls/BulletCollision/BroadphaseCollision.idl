@@ -3,6 +3,11 @@ interface btDbvtVolume {
     // TODO
 };
 
+// http://bulletphysics.org/Bullet/BulletFull/classbtOverlappingPairCache.html
+interface btOverlappingPairCache {
+    // TODO
+};
+
 // http://bulletphysics.org/Bullet/BulletFull/structbtBroadphaseProxy.html
 interface btBroadphaseProxy {
     void btBroadphaseProxy();

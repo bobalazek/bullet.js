@@ -1,20 +1,117 @@
 // http://bulletphysics.org/Bullet/BulletFull/classbtDispatcher.html
 interface btDispatcher {
+    // TODO: Some issuse with btCollisionObjectWrapper below. Must fix that first, for this to work.
+    // btCollisionAlgorithm findAlgorithm(
+    //     [Const] btCollisionObjectWrapper body0Wrap,
+    //     [Const] btCollisionObjectWrapper body1Wrap,
+    //     btPersistentManifold sharedManifold
+    // );
+    btPersistentManifold getNewManifold(
+        [Const] btCollisionObject b0,
+        [Const] btCollisionObject b1
+    );
+    void releaseManifold(btPersistentManifold manifold);
+    void clearManifold(btPersistentManifold manifold);
+
+    boolean needsCollision(
+        [Const] btCollisionObject body0,
+        [Const] btCollisionObject body1
+    );
+    boolean needsResponse(
+        [Const] btCollisionObject body0,
+        [Const] btCollisionObject body1
+    );
+
+    void dispatchAllCollisionPairs(
+        btOverlappingPairCache pairCache,
+        [Ref, Const] btDispatcherInfo dispatchInfo,
+        btDispatcher dispatcher
+    );
+
     long getNumManifolds();
 
-    [Const] btPoolAllocator getInternalManifoldPool();
+    btPersistentManifold getManifoldByIndexInternal(long index);
+   //  btPersistentManifold getInternalManifoldPointer();
+    btPoolAllocator getInternalManifoldPool();
 
     any allocateCollisionAlgorithm(long size);
     void freeCollisionAlgorithm(any ptr);
 };
 
-// http://bulletphysics.org/Bullet/BulletFull/classbtBroadphaseInterface.html
-interface btBroadphaseInterface {
+// http://bulletphysics.org/Bullet/BulletFull/classbtVoronoiSimplexSolver.html
+interface btVoronoiSimplexSolver {
+    void removeVertex(long index);
+    void reduceVertices([Ref, Const] btUsageBitfield usedVerts);
+    boolean updateClosestVectorAndPoints();
+    boolean closestPtPointTetrahedron(
+        [Ref, Const] btVector3 p,
+        [Ref, Const] btVector3 a,
+        [Ref, Const] btVector3 b,
+        [Ref, Const] btVector3 c,
+        [Ref, Const] btVector3 d,
+        [Ref, Const] btSubSimplexClosestResult finalResult
+    );
+    long pointOutsideOfPlane(
+        [Ref, Const] btVector3 p,
+        [Ref, Const] btVector3 a,
+        [Ref, Const] btVector3 b,
+        [Ref, Const] btVector3 c,
+        [Ref, Const] btVector3 d
+    );
+    boolean closestPtPointTriangle(
+        [Ref, Const] btVector3 p,
+        [Ref, Const] btVector3 a,
+        [Ref, Const] btVector3 b,
+        [Ref, Const] btVector3 c,
+        [Ref, Const] btSubSimplexClosestResult result
+    );
+
+    void btVoronoiSimplexSolver();
+
+    void reset();
+
+    void addVertex(
+        [Ref, Const] btVector3 w,
+        [Ref, Const] btVector3 p,
+        [Ref, Const] btVector3 q
+    );
+
+    void setEqualVertexThreshold(float threshold);
+    float getEqualVertexThreshold();
+
+    boolean closest([Ref] btVector3 v);
+
+    float maxVertex();
+    boolean fullSimplex();
+    long getSimplex(btVector3 pBuf, btVector3 qBuf, btVector3 yBuf);
+    boolean inSimplex([Ref, Const] btVector3 w);
+
+    void backup_closest([Ref] btVector3 v);
+
+    boolean emptySimplex();
+
+    void compute_points([Ref] btVector3 p1, [Ref] btVector3 p2);
+
+    long numVertices();
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtUsageBitfield.html
+interface btUsageBitfield {
     // TODO
 };
 
-// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionConfiguration.html
-interface btCollisionConfiguration {
+// http://bulletphysics.org/Bullet/BulletFull/structbtSubSimplexClosestResult.html
+interface btSubSimplexClosestResult  {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionAlgorithm.html
+interface btCollisionAlgorithm {
+    // TODO
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtBroadphaseInterface.html
+interface btBroadphaseInterface {
     // TODO
 };
 
@@ -52,16 +149,40 @@ interface btDefaultCollisionConstructionInfo {
 
     attribute btPoolAllocator m_persistentManifoldPool;
     attribute btPoolAllocator m_collisionAlgorithmPool;
-    attribute long 	m_defaultMaxPersistentManifoldPoolSize;
-    attribute long 	m_defaultMaxCollisionAlgorithmPoolSize;
-    attribute long 	m_customCollisionAlgorithmMaxElementSize;
-    attribute long 	m_useEpaPenetrationAlgorithm;
+    attribute long m_defaultMaxPersistentManifoldPoolSize;
+    attribute long m_defaultMaxCollisionAlgorithmPoolSize;
+    attribute long m_customCollisionAlgorithmMaxElementSize;
+    attribute long m_useEpaPenetrationAlgorithm;
+};
+
+// http://bulletphysics.org/Bullet/BulletFull/classbtCollisionConfiguration.html
+interface btCollisionConfiguration {
+    btPoolAllocator getPersistentManifoldPool();
+    btPoolAllocator getCollisionAlgorithmPool();
+    btCollisionAlgorithmCreateFunc getCollisionAlgorithmCreateFunc(long proxyType0, long proxyType1);
 };
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtDefaultCollisionConfiguration.html
 interface btDefaultCollisionConfiguration  {
     void btDefaultCollisionConfiguration([Ref, Const] btDefaultCollisionConstructionInfo constructionInfo);
+
+    btPoolAllocator getPersistentManifoldPool();
+    btPoolAllocator getCollisionAlgorithmPool();
+    // btVoronoiSimplexSolver getSimplexSolver();
+    btCollisionAlgorithmCreateFunc getCollisionAlgorithmCreateFunc(long proxyType0, long proxyType1);
+    void setConvexConvexMultipointIterations(
+        long numPerturbationIterations,
+        long minimumPointsPerturbationThreshold
+    );
+    void setPlaneConvexMultipointIterations(
+        long numPerturbationIterations,
+        long minimumPointsPerturbationThreshold
+    );
 };
+btDefaultCollisionConfiguration implements btCollisionConfiguration;
+
+// http://bulletphysics.org/Bullet/BulletFull/structbtCollisionAlgorithmCreateFunc.html
+interface btCollisionAlgorithmCreateFunc {};
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionObject.html
 interface btCollisionObject {
@@ -170,7 +291,7 @@ interface btCollisionObject {
     // [Value] attribute btTransform m_worldTransform;
     // attribute long m_partId;
     // attribute long m_index;
-//};
+// };
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtCollisionWorld.html
 interface btCollisionWorld {
@@ -182,7 +303,7 @@ interface btCollisionWorld {
 
     void setBroadphase(btBroadphaseInterface pairCache);
     [Const] btBroadphaseInterface getBroadphase();
-    // [Const] btOverlappingPairCache getPairCache();
+    [Const] btOverlappingPairCache getPairCache();
     [Const] btDispatcher getDispatcher();
 
     void updateSingleAabb(btCollisionObject colObj);

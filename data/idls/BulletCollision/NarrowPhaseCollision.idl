@@ -63,4 +63,25 @@ interface btPersistentManifold {
 
     long getNumContacts();
     void setNumContacts(long cachedPoints);
+
+    [Ref, Const] btManifoldPoint getContactPoint(long index);
+
+    float getContactBreakingThreshold();
+    float getContactProcessingThreshold();
+
+    void setContactBreakingThreshold(float contactBreakingThreshold);
+    void setContactProcessingThreshold(float contactBreakingThreshold);
+
+    long getCacheEntry([Ref, Const] btManifoldPoint newPoint);
+    void addManifoldPoint([Ref, Const] btManifoldPoint newPoint);
+    void removeContactPoint(long index);
+    void replaceContactPoint([Ref, Const] btManifoldPoint newPoint, long insertIndex);
+    boolean validContactDistance([Ref, Const] btManifoldPoint pt);
+    void refreshContactPoints([Ref, Const] btTransform trA, [Ref, Const] btTransform trB);
+
+    void clearManifold();
+
+    attribute long m_companionIdA;
+    attribute long m_companionIdB;
+    attribute long m_index1a;
 };

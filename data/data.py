@@ -20,17 +20,11 @@ def get_bullet_includes(BULLET_DIRECTORY):
 
         ##### Bullet Collision
 
-        ### Collision Dispatch
-        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                     'CollisionDispatch', 'btCollisionObject.h'),
-        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                     'CollisionDispatch', 'btCollisionObjectWrapper.h'),
-        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                     'CollisionDispatch', 'btCollisionWorld.h'),
-        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
-                     'CollisionDispatch', 'btDefaultCollisionConfiguration.h'),
-
         ### Broadphase Collision
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'BroadphaseCollision', 'btBroadphaseProxy.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'BroadphaseCollision', 'btOverlappingPairCache.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'BroadphaseCollision', 'btDbvt.h'),
 
@@ -39,6 +33,22 @@ def get_bullet_includes(BULLET_DIRECTORY):
                      'NarrowPhaseCollision', 'btManifoldPoint.h'),
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
                      'NarrowPhaseCollision', 'btPersistentManifold.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'NarrowPhaseCollision', 'btVoronoiSimplexSolver.h'),
+
+        ### Collision Dispatch
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btCollisionObject.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btCollisionObjectWrapper.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btCollisionWorld.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btCollisionCreateFunc.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btCollisionConfiguration.h'),
+        os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
+                     'CollisionDispatch', 'btDefaultCollisionConfiguration.h'),
 
         ### Collision Shapes
         os.path.join(BULLET_DIRECTORY, 'src', 'BulletCollision',
