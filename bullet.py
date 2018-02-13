@@ -94,6 +94,7 @@ def build():
 
         os.chdir(BULLET_MAKE_DIRECTORY)
 
+        # CMake
         bullet_cmake_args = [
             emscripten.PYTHON,
             os.path.join(EMSCRIPTEN_ROOT, 'emcmake'),
@@ -109,6 +110,8 @@ def build():
         emscripten.Building.configure(bullet_cmake_args)
 
         CORES = multiprocessing.cpu_count()
+
+        # Make
         bullet_make_args = [
             emscripten.PYTHON,
             os.path.join(EMSCRIPTEN_ROOT, 'emmake'),
@@ -131,17 +134,15 @@ def build():
 
     open(IDL_FILE_PATH, 'w').write(idl_file_content)
 
+    ### Generate
+    print('===== Generating emscripten bindings ... =====')
+
     emscripten_binder_args = [
         emscripten.PYTHON,
         os.path.join(EMSCRIPTEN_ROOT, 'tools', 'webidl_binder.py'),
         IDL_FILE_PATH,
         'glue'
     ]
-
-    ### Generate
-    print('===== Generating emscripten bindings ... =====')
-    print('----- Binder args: ' + ' '.join(emscripten_binder_args) + ' -----')
-
     subprocess.Popen(emscripten_binder_args).communicate()
 
     ### Build
@@ -157,19 +158,22 @@ def build():
         '-s', 'NO_DYNAMIC_EXECUTION=1',
         '-s', 'EXPORT_NAME="Bullet"',
         '-s', 'MODULARIZE=1',
+        '-s', 'TOTAL_MEMORY=%d' % (512 * 1024 * 1024),
         '-I', BULLET_SRC_DIRECTORY_RELATIVE,
     ]
+    emscripten_lib_args = emscripten_args
+
+    emscripten_args = emscripten_args + ['-c']
 
     for include in BULLET_INCLUDES:
         include = include.replace(ROOT, '').lstrip(' \\/\t\n\r')
         emscripten_args += ['-include', include]
 
     print('===== Building emscripten bindings ... =====')
-    print('----- Binder args: ' + ' '.join(emscripten_args) + ' -----')
 
     emscripten.Building.emcc(
         'glue.cpp',
-        emscripten_args + ['-c'],
+        emscripten_args,
         'glue.bc'
     )
 
@@ -180,7 +184,7 @@ def build():
 
     emscripten.Building.emcc(
         'libglue.bc',
-        emscripten_args,
+        emscripten_lib_args,
         BUILD_FILE_PATH
     )
 
