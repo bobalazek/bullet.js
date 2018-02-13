@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, subprocess, argparse, pathlib, multiprocessing
+import os, sys, shutil, subprocess, argparse, pathlib, multiprocessing
 import requests
 from io import BytesIO
 from zipfile import ZipFile
@@ -39,7 +39,8 @@ BULLET_ZIP_FILE_NAME = BULLET_VERSION + '.zip'
 BULLET_ZIP_URL = 'https://github.com/bulletphysics/bullet3/archive/' + BULLET_ZIP_FILE_NAME
 BULLET_INCLUDES = get_bullet_includes(BULLET_DIRECTORY)
 BULLET_SRC_DIRECTORY_RELATIVE = os.path.join('third_party', 'bullet3-' + BULLET_VERSION, 'src')
-BULLET_FORCE_BUILD = False # should we force the bullet to be build?
+BULLET_MAKE_DIRECTORY = os.path.join(BULLET_DIRECTORY, 'make_build')
+BULLET_FORCE_BUILD = True # should we force the bullet to be build?
 
 ########## Arguments ##########
 argument_parser = argparse.ArgumentParser(description='Bullet.js')
@@ -81,18 +82,22 @@ def build():
     print('========== Starting the build ... ==========')
 
     ### Build Bullet
-    bullet_cmake_cache_file_path = os.path.join(BULLET_DIRECTORY, 'CMakeCache.txt')
-    if not os.path.isfile(bullet_cmake_cache_file_path) or BULLET_FORCE_BUILD:
+    if not os.path.exists(BULLET_MAKE_DIRECTORY) or BULLET_FORCE_BUILD:
         print('===== Building BULLET ... =====')
 
-        if os.path.isfile(bullet_cmake_cache_file_path):
-            os.remove(bullet_cmake_cache_file_path)
+        if BULLET_FORCE_BUILD and os.path.exists(BULLET_MAKE_DIRECTORY):
+            shutil.rmtree(BULLET_MAKE_DIRECTORY)
+
+        if not os.path.exists(BULLET_MAKE_DIRECTORY):
+            os.makedirs(BULLET_MAKE_DIRECTORY)
+
+        os.chdir(BULLET_MAKE_DIRECTORY)
 
         bullet_cmake_args = [
             emscripten.PYTHON,
             os.path.join(EMSCRIPTEN_ROOT, 'emcmake'),
             'cmake',
-            '.',
+            '..',
             '-DBUILD_DEMOS=OFF',
             '-DBUILD_EXTRAS=OFF',
             '-DBUILD_CPU_DEMOS=OFF',
@@ -100,7 +105,7 @@ def build():
             '-DBUILD_PYBULLET=OFF',
             '-DCMAKE_BUILD_TYPE=Release',
         ]
-        subprocess.Popen(bullet_cmake_args, cwd=BULLET_DIRECTORY).communicate()
+        subprocess.Popen(bullet_cmake_args).communicate()
 
         CORES = multiprocessing.cpu_count()
         bullet_make_args = [
@@ -109,7 +114,9 @@ def build():
             'make',
             '-j' + str(CORES),
         ]
-        subprocess.Popen(bullet_make_args, cwd=BULLET_DIRECTORY).communicate()
+        subprocess.Popen(bullet_make_args).communicate()
+
+        os.chdir(ROOT)
 
     ### Concat IDLs
     idl_file_content = ''
