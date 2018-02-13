@@ -38,7 +38,7 @@ BULLET_DIRECTORY = os.path.join(THIRD_PARTY_DIR, 'bullet3-' + BULLET_VERSION)
 BULLET_ZIP_FILE_NAME = BULLET_VERSION + '.zip'
 BULLET_ZIP_URL = 'https://github.com/bulletphysics/bullet3/archive/' + BULLET_ZIP_FILE_NAME
 BULLET_INCLUDES = get_bullet_includes(BULLET_DIRECTORY)
-BULLET_SRC_DIRECTORY_RELATIVE = 'third_party/' + 'bullet3-' + BULLET_VERSION + '/src'
+BULLET_SRC_DIRECTORY_RELATIVE = os.path.join('third_party', 'bullet3-' + BULLET_VERSION, 'src')
 
 ########## Arguments ##########
 argument_parser = argparse.ArgumentParser(description='Bullet.js')
