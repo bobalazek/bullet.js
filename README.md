@@ -8,7 +8,7 @@ A JS port of the C++ [Bullet3](https://github.com/bulletphysics/bullet3) physics
 ## Requirements
 
 * `Python 3.5`
-* [Emscripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html)
+* [Emscripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) -- it is also recommended to install [MinGW](https://kripken.github.io/emscripten-site/docs/building_from_source/toolchain_what_is_needed.html#compiler-toolchain) for windows
 
 
 ## Setup

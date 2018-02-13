@@ -41,7 +41,7 @@ BULLET_INCLUDES = get_bullet_includes(BULLET_DIRECTORY)
 BULLET_SRC_DIRECTORY_RELATIVE = os.path.join('third_party', 'bullet3-' + BULLET_VERSION, 'src')
 BULLET_MAKE_DIRECTORY = os.path.join(BULLET_DIRECTORY, 'make_build')
 BULLET_ARCHIVE_INCLUDES = get_bullet_archive_includes(BULLET_MAKE_DIRECTORY)
-BULLET_FORCE_BUILD = False # should we force the bullet to be build?
+BULLET_FORCE_BUILD = True # should we force the bullet to be build?
 
 ########## Arguments ##########
 argument_parser = argparse.ArgumentParser(description='Bullet.js')
@@ -93,6 +93,8 @@ def build():
             os.makedirs(BULLET_MAKE_DIRECTORY)
 
         os.chdir(BULLET_MAKE_DIRECTORY)
+
+        # TODO: get it working for the super developer friendly windows platform
 
         # CMake
         bullet_cmake_args = [
