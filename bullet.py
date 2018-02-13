@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, subprocess, argparse, pathlib
+import os, sys, subprocess, argparse, pathlib, multiprocessing
 import requests
 from io import BytesIO
 from zipfile import ZipFile
@@ -33,12 +33,13 @@ IDL_FILE_PATH = os.path.join(ROOT, 'bindings.idl')
 IDL_FILE_PATHS = get_idl_file_paths(ROOT)
 
 ##### Bullet #####
-BULLET_VERSION = '2.87'
+BULLET_VERSION = 'master' # '2.87' # issue because: https://github.com/bulletphysics/bullet3/pull/1409
 BULLET_DIRECTORY = os.path.join(THIRD_PARTY_DIR, 'bullet3-' + BULLET_VERSION)
 BULLET_ZIP_FILE_NAME = BULLET_VERSION + '.zip'
 BULLET_ZIP_URL = 'https://github.com/bulletphysics/bullet3/archive/' + BULLET_ZIP_FILE_NAME
 BULLET_INCLUDES = get_bullet_includes(BULLET_DIRECTORY)
 BULLET_SRC_DIRECTORY_RELATIVE = os.path.join('third_party', 'bullet3-' + BULLET_VERSION, 'src')
+BULLET_FORCE_BUILD = False # should we force the bullet to be build?
 
 ########## Arguments ##########
 argument_parser = argparse.ArgumentParser(description='Bullet.js')
@@ -80,7 +81,35 @@ def build():
     print('========== Starting the build ... ==========')
 
     ### Build Bullet
-    # TODO
+    bullet_cmake_cache_file_path = os.path.join(BULLET_DIRECTORY, 'CMakeCache.txt')
+    if not os.path.isfile(bullet_cmake_cache_file_path) or BULLET_FORCE_BUILD:
+        print('===== Building BULLET ... =====')
+
+        if os.path.isfile(bullet_cmake_cache_file_path):
+            os.remove(bullet_cmake_cache_file_path)
+
+        bullet_cmake_args = [
+            emscripten.PYTHON,
+            os.path.join(EMSCRIPTEN_ROOT, 'emcmake'),
+            'cmake',
+            '.',
+            '-DBUILD_DEMOS=OFF',
+            '-DBUILD_EXTRAS=OFF',
+            '-DBUILD_CPU_DEMOS=OFF',
+            '-DUSE_GLUT=OFF',
+            '-DBUILD_PYBULLET=OFF',
+            '-DCMAKE_BUILD_TYPE=Release',
+        ]
+        subprocess.Popen(bullet_cmake_args, cwd=BULLET_DIRECTORY).communicate()
+
+        CORES = multiprocessing.cpu_count()
+        bullet_make_args = [
+            emscripten.PYTHON,
+            os.path.join(EMSCRIPTEN_ROOT, 'emmake'),
+            'make',
+            '-j' + CORES,
+        ]
+        subprocess.Popen(bullet_make_args, cwd=BULLET_DIRECTORY).communicate()
 
     ### Concat IDLs
     idl_file_content = ''
@@ -102,7 +131,7 @@ def build():
     ]
 
     ### Generate
-    print('=== Generating emscripten bindings ... ===')
+    print('===== Generating emscripten bindings ... =====')
     print('----- Binder args: ' + ' '.join(emscripten_binder_args) + ' -----')
 
     subprocess.Popen(emscripten_binder_args).communicate()
@@ -127,8 +156,8 @@ def build():
         include = include.replace(ROOT, '').lstrip(' \\/\t\n\r')
         emscripten_args += ['-include', include]
 
-    print('=== Building emscripten bindings ... ===')
-    print('Binder args: ' + ' '.join(emscripten_args))
+    print('===== Building emscripten bindings ... =====')
+    print('----- Binder args: ' + ' '.join(emscripten_args) + ' -----')
 
     emscripten.Building.emcc(
         'glue.cpp', emscripten_args, BUILD_FILE_PATH)

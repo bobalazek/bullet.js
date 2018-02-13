@@ -1,6 +1,7 @@
 *.py[co]
-glue.*
 *.out
 *.pkl
+glue.*
+CMake*
 third_party/*
 /bindings.idl
