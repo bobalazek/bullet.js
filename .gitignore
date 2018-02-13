@@ -2,6 +2,7 @@
 *.out
 *.pkl
 glue.*
+libglue.*
 CMake*
 third_party/*
 /bindings.idl

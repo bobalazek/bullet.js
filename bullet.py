@@ -4,7 +4,7 @@ import os, sys, shutil, subprocess, argparse, pathlib, multiprocessing
 import requests
 from io import BytesIO
 from zipfile import ZipFile
-from data.data import get_bullet_includes, get_idl_file_paths
+from data.data import get_bullet_includes, get_bullet_archive_includes, get_idl_file_paths
 
 ########## Emscripten ##########
 EMSCRIPTEN_USER_FILE = os.path.expanduser('~/.emscripten')
@@ -40,7 +40,8 @@ BULLET_ZIP_URL = 'https://github.com/bulletphysics/bullet3/archive/' + BULLET_ZI
 BULLET_INCLUDES = get_bullet_includes(BULLET_DIRECTORY)
 BULLET_SRC_DIRECTORY_RELATIVE = os.path.join('third_party', 'bullet3-' + BULLET_VERSION, 'src')
 BULLET_MAKE_DIRECTORY = os.path.join(BULLET_DIRECTORY, 'make_build')
-BULLET_FORCE_BUILD = True # should we force the bullet to be build?
+BULLET_ARCHIVE_INCLUDES = get_bullet_archive_includes(BULLET_MAKE_DIRECTORY)
+BULLET_FORCE_BUILD = False # should we force the bullet to be build?
 
 ########## Arguments ##########
 argument_parser = argparse.ArgumentParser(description='Bullet.js')
@@ -167,7 +168,21 @@ def build():
     print('----- Binder args: ' + ' '.join(emscripten_args) + ' -----')
 
     emscripten.Building.emcc(
-        'glue.cpp', emscripten_args, BUILD_FILE_PATH)
+        'glue.cpp',
+        emscripten_args + ['-c'],
+        'glue.bc'
+    )
+
+    emscripten.Building.link(
+        ['glue.bc'] + BULLET_ARCHIVE_INCLUDES,
+        'libglue.bc'
+    )
+
+    emscripten.Building.emcc(
+        'libglue.bc',
+        emscripten_args,
+        BUILD_FILE_PATH
+    )
 
     build_content = '// Bullet.js is a port of C++ Bullet3 Physics (zlib licensed).\n'
     build_content += open(BUILD_FILE_PATH).read()
