@@ -105,7 +105,7 @@ def build():
             '-DBUILD_PYBULLET=OFF',
             '-DCMAKE_BUILD_TYPE=Release',
         ]
-        subprocess.Popen(bullet_cmake_args).communicate()
+        emscripten.Building.configure(bullet_cmake_args)
 
         CORES = multiprocessing.cpu_count()
         bullet_make_args = [
@@ -114,7 +114,7 @@ def build():
             'make',
             '-j' + str(CORES),
         ]
-        subprocess.Popen(bullet_make_args).communicate()
+        emscripten.Building.make(bullet_make_args)
 
         os.chdir(ROOT)
 
