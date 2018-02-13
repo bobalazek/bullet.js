@@ -403,7 +403,7 @@ interface btCollisionConfiguration {
 
 // http://bulletphysics.org/Bullet/BulletFull/classbtDefaultCollisionConfiguration.html
 interface btDefaultCollisionConfiguration  {
-    void btDefaultCollisionConfiguration([Ref, Const] optional btDefaultCollisionConstructionInfo constructionInfo);
+    void btDefaultCollisionConfiguration([Ref, Const] btDefaultCollisionConstructionInfo constructionInfo);
 
     btPoolAllocator getPersistentManifoldPool();
     btPoolAllocator getCollisionAlgorithmPool();

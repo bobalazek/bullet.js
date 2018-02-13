@@ -38,6 +38,7 @@ BULLET_DIRECTORY = os.path.join(THIRD_PARTY_DIR, 'bullet3-' + BULLET_VERSION)
 BULLET_ZIP_FILE_NAME = BULLET_VERSION + '.zip'
 BULLET_ZIP_URL = 'https://github.com/bulletphysics/bullet3/archive/' + BULLET_ZIP_FILE_NAME
 BULLET_INCLUDES = get_bullet_includes(BULLET_DIRECTORY)
+BULLET_SRC_DIRECTORY_RELATIVE = 'third_party/' + 'bullet3-' + BULLET_VERSION + '/src'
 
 ########## Arguments ##########
 argument_parser = argparse.ArgumentParser(description='Bullet.js')
@@ -72,14 +73,16 @@ def setup():
 
 ########## Build ##########
 def build():
-
     if not os.path.isdir(BULLET_DIRECTORY):
         print('BULLET not found. Please run "python bullet.py setup" first.')
         sys.exit(1)
 
     print('========== Starting the build ... ==========')
 
-    ##### Bindings #####
+    ### Build Bullet
+    # TODO
+
+    ### Concat IDLs
     idl_file_content = ''
     for include in IDL_FILE_PATHS:
         idl_file_content += '////////// ' + \
@@ -117,7 +120,7 @@ def build():
         '-s', 'NO_DYNAMIC_EXECUTION=1',
         '-s', 'EXPORT_NAME="Bullet"',
         '-s', 'MODULARIZE=1',
-        '-I', 'third_party/' + 'bullet3-' + BULLET_VERSION + '/src',
+        '-I', BULLET_SRC_DIRECTORY_RELATIVE,
     ]
 
     for include in BULLET_INCLUDES:
