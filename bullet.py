@@ -107,7 +107,7 @@ def build():
             emscripten.PYTHON,
             os.path.join(EMSCRIPTEN_ROOT, 'emmake'),
             'make',
-            '-j' + CORES,
+            '-j' + str(CORES),
         ]
         subprocess.Popen(bullet_make_args, cwd=BULLET_DIRECTORY).communicate()
 
