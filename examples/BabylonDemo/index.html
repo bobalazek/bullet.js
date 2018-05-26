@@ -55,14 +55,18 @@
 
                 // TODO: Physics
                 Bullet().then(function (Bullet) {
-                    console.log(Bullet); // debug
-                    var collisionConfiguration = new Bullet.btDefaultCollisionConfiguration(),
-                        dispatcher = new Bullet.btCollisionDispatcher(collisionConfiguration),
-                        overlappingPairCache = new Bullet.btDbvtBroadphase(),
-                        solver = new Bullet.btSequentialImpulseConstraintSolver(),
-                        dynamicsWorld = new Bullet.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+                    var collisionConfiguration = new Bullet.btDefaultCollisionConfiguration();
+                    var dispatcher = new Bullet.btCollisionDispatcher(collisionConfiguration);
+                    var overlappingPairCache = new Bullet.btDbvtBroadphase();
+                    var solver = new Bullet.btSequentialImpulseConstraintSolver();
+                    var dynamicsWorld = new Bullet.btDiscreteDynamicsWorld(
+                        dispatcher,
+                        overlappingPairCache,
+                        solver,
+                        collisionConfiguration
+                    );
 
-                    dynamicsWorld.setGravity(new Ammo.btVector3(0, -10, 0));
+                    dynamicsWorld.setGravity(new Bullet.btVector3(0, -10, 0));
                 });
             });
         </script>

@@ -5,10 +5,10 @@ interface btVector3 {
     void btVector3();
     void btVector3(float _x, float _y, float _z);
 
-    [Operator="+=", Ref] btVector3 op_add([Ref] btVector3 v);
-    [Operator="-=", Ref] btVector3 op_sub([Ref] btVector3 v);
-    [Operator="*=", Ref] btVector3 op_mul(float s);
-    [Operator="/=", Ref] btVector3 op_div(float s);
+    // [Operator="+=", Ref] btVector3 op_add([Ref] btVector3 v);
+    // [Operator="-=", Ref] btVector3 op_sub([Ref] btVector3 v);
+    // [Operator="*=", Ref] btVector3 op_mul(float s);
+    // [Operator="/=", Ref] btVector3 op_div(float s);
 
     float dot([Ref, Const] btVector3 v);
     float length2();
@@ -49,7 +49,7 @@ interface btVector3 {
     float z();
     float w();
 
-    [Operator="=="] boolean op_eq([Ref, Const] btVector3 other);
+    // [Operator="=="] boolean op_eq([Ref, Const] btVector3 other);
 
     void setMax([Ref, Const] btVector3 other);
     void setMin([Ref, Const] btVector3 other);
@@ -104,17 +104,17 @@ interface btQuaternion {
     void setEuler(float yaw, float pitch, float roll);
     void setEulerZYX(float yaw, float pitch, float roll);
 
-    [Operator="+=", Ref] btQuaternion op_add([Ref, Const] btQuaternion q);
-    [Operator="-=", Ref] btQuaternion op_sub([Ref, Const] btQuaternion q);
-    [Operator="*=", Ref] btQuaternion op_mul(float s);
-    [Operator="*=", Ref] btQuaternion op_mul_q([Ref, Const] btQuaternion q);
+    // [Operator="+=", Ref] btQuaternion op_add([Ref, Const] btQuaternion q);
+    // [Operator="-=", Ref] btQuaternion op_sub([Ref, Const] btQuaternion q);
+    // [Operator="*=", Ref] btQuaternion op_mul(float s);
+    // [Operator="*=", Ref] btQuaternion op_mul_q([Ref, Const] btQuaternion q);
 
     float dot([Ref, Const] btQuaternion q);
     float length2();
     float length();
     [Ref] btQuaternion normalize();
 
-    [Operator="/=", Ref] btQuaternion op_div(float s);
+    // [Operator="/=", Ref] btQuaternion op_div(float s);
 
     void normalized();
 
@@ -146,9 +146,9 @@ interface btMatrix3x3 {
     [Value] btVector3 getColumn(long i);
     [Value] btVector3 getRow(long i);
 
-    [Operator="*=", Ref] btMatrix3x3 op_mul([Ref, Const] btMatrix3x3 m);
-    [Operator="+=", Ref] btMatrix3x3 op_add([Ref, Const] btMatrix3x3 m);
-    [Operator="-=", Ref] btMatrix3x3 op_sub([Ref, Const] btMatrix3x3 m);
+    // [Operator="*=", Ref] btMatrix3x3 op_mul([Ref, Const] btMatrix3x3 m);
+    // [Operator="+=", Ref] btMatrix3x3 op_add([Ref, Const] btMatrix3x3 m);
+    // [Operator="-=", Ref] btMatrix3x3 op_sub([Ref, Const] btMatrix3x3 m);
 
     // void setFromOpenGLSubMatrix(float m);
     void setValue(float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz);
@@ -204,7 +204,7 @@ interface btTransform {
     void setRotation([Ref, Const] btQuaternion q);
     void setIdentity();
 
-    [Operator="*=", Ref] btTransform op_mul([Ref, Const] btTransform t);
+    // [Operator="*=", Ref] btTransform op_mul([Ref, Const] btTransform t);
     [Value] btTransform inverse();
     [Value] btTransform inverseTimes([Ref, Const] btTransform t);
 

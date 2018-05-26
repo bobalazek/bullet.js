@@ -49,7 +49,7 @@ interface btVoronoiSimplexSolver {
         [Ref, Const] btVector3 b,
         [Ref, Const] btVector3 c,
         [Ref, Const] btVector3 d,
-        [Ref, Const] btSubSimplexClosestResult finalResult
+        [Ref] btSubSimplexClosestResult finalResult
     );
     long pointOutsideOfPlane(
         [Ref, Const] btVector3 p,
@@ -63,7 +63,7 @@ interface btVoronoiSimplexSolver {
         [Ref, Const] btVector3 a,
         [Ref, Const] btVector3 b,
         [Ref, Const] btVector3 c,
-        [Ref, Const] btSubSimplexClosestResult result
+        [Ref] btSubSimplexClosestResult result
     );
 
     void btVoronoiSimplexSolver();
@@ -228,8 +228,8 @@ interface btBroadphaseInterface {
     );
     void getAabb(
         btBroadphaseProxy proxy,
-        [Ref, Const] btVector3 aabbMin,
-        [Ref, Const] btVector3 aabbMax
+        [Ref] btVector3 aabbMin,
+        [Ref] btVector3 aabbMax
     );
     void rayTest (
         [Ref, Const] btVector3 rayFrom,
@@ -474,7 +474,7 @@ interface btCollisionObject {
     void setWorldTransform([Ref, Const] btTransform worldTrans);
 
     [Const] btBroadphaseProxy getBroadphaseHandle();
-    void setBroadphaseHandle([Const] btBroadphaseProxy handle);
+    void setBroadphaseHandle(btBroadphaseProxy handle);
 
     [Ref, Const] btTransform getInterpolationWorldTransform();
     void setInterpolationWorldTransform([Ref, Const] btTransform trans);

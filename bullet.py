@@ -23,11 +23,31 @@ except:
 sys.path.append(EMSCRIPTEN_ROOT)
 import tools.shared as emscripten
 
+########## Arguments ##########
+argument_parser = argparse.ArgumentParser(description='Bullet.js')
+argument_parser.add_argument(
+    'action',
+    help='Which action should we execute?',
+    choices=['setup', 'build']
+)
+argument_parser.add_argument(
+    '--wasm',
+    help="Should it be an wasm build?",
+    action="store_true"
+)
+argument_parser.add_argument(
+    '--rebuild-bullet',
+    help="Should the bullet lib be rebuild?",
+    action="store_true"
+)
+args = argument_parser.parse_args()
+
 ########## Configuration ##########
 ##### General #####
 ROOT = os.path.dirname(os.path.realpath(__file__))
+IS_WASM_BUILD = args.wasm
 THIRD_PARTY_DIR = os.path.join(ROOT, 'third_party')
-BUILD_FILE_NAME = 'bullet.js'
+BUILD_FILE_NAME = 'bullet.wasm.js' if IS_WASM_BUILD else 'bullet.js'
 BUILD_FILE_PATH = os.path.join(ROOT, 'build', BUILD_FILE_NAME)
 IDL_FILE_PATH = os.path.join(ROOT, 'bindings.idl')
 IDL_FILE_PATHS = get_idl_file_paths(ROOT)
@@ -41,16 +61,7 @@ BULLET_INCLUDES = get_bullet_includes(BULLET_DIRECTORY)
 BULLET_SRC_DIRECTORY_RELATIVE = os.path.join('third_party', 'bullet3-' + BULLET_VERSION, 'src')
 BULLET_MAKE_DIRECTORY = os.path.join(BULLET_DIRECTORY, 'make_build')
 BULLET_ARCHIVE_INCLUDES = get_bullet_archive_includes(BULLET_MAKE_DIRECTORY)
-BULLET_FORCE_BUILD = True # should we force the bullet to be build?
-
-########## Arguments ##########
-argument_parser = argparse.ArgumentParser(description='Bullet.js')
-argument_parser.add_argument(
-    'action',
-    help='Which action should we execute?',
-    choices=['setup', 'build']
-)
-args = argument_parser.parse_args()
+BULLET_FORCE_BUILD = args.rebuild_bullet # should we force the bullet to be build?
 
 ########## Setup ##########
 def setup():
@@ -93,8 +104,6 @@ def build():
             os.makedirs(BULLET_MAKE_DIRECTORY)
 
         os.chdir(BULLET_MAKE_DIRECTORY)
-
-        # TODO: get it working for the super developer friendly windows platform
 
         # CMake
         bullet_cmake_args = [
@@ -163,6 +172,13 @@ def build():
         '-s', 'TOTAL_MEMORY=%d' % (512 * 1024 * 1024),
         '-I', BULLET_SRC_DIRECTORY_RELATIVE,
     ]
+    if IS_WASM_BUILD:
+        emscripten_args = emscripten_args + [
+            '-s', 'WASM=1',
+            '-s', 'BINARYEN_IGNORE_IMPLICIT_TRAPS=1',
+            '-s', 'BINARYEN_TRAP_MODE="allow"',
+        ]
+
     emscripten_lib_args = emscripten_args
 
     emscripten_args = emscripten_args + ['-c']
