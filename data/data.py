@@ -99,6 +99,9 @@ def get_bullet_archive_includes(BULLET_MAKE_DIRECTORY):
     return [
         os.path.join(BULLET_MAKE_DIRECTORY, 'src', 'LinearMath', 'libLinearMath.a'),
         os.path.join(BULLET_MAKE_DIRECTORY, 'src', 'BulletCollision', 'libBulletCollision.a'),
+        os.path.join(BULLET_MAKE_DIRECTORY, 'src', 'BulletDynamics', 'libBulletDynamics.a'),
+        os.path.join(BULLET_MAKE_DIRECTORY, 'src', 'BulletSoftBody', 'libBulletSoftBody.a'),
+        os.path.join(BULLET_MAKE_DIRECTORY, 'src', 'BulletInverseDynamics', 'libBulletInverseDynamics.a'),
     ]
 
 def get_idl_file_paths(ROOT):
