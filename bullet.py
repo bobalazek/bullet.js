@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# Note: This is a quite heavily modified make/build script for ammo.js (https://github.com/kripken/ammo.js/blob/master/make.py)
+
 import os, sys, shutil, subprocess, argparse, pathlib, multiprocessing
 import requests
 from io import BytesIO
@@ -36,6 +38,11 @@ argument_parser.add_argument(
     action="store_true"
 )
 argument_parser.add_argument(
+    '--closure',
+    help="Should it run via the closure compiler?",
+    action="store_true"
+)
+argument_parser.add_argument(
     '--rebuild-bullet',
     help="Should the bullet lib be rebuild?",
     action="store_true"
@@ -46,6 +53,7 @@ args = argument_parser.parse_args()
 ##### General #####
 ROOT = os.path.dirname(os.path.realpath(__file__))
 IS_WASM_BUILD = args.wasm
+CLOSURE = args.closure
 THIRD_PARTY_DIR = os.path.join(ROOT, 'third_party')
 BUILD_FILE_NAME = 'bullet.wasm.js' if IS_WASM_BUILD else 'bullet.js'
 BUILD_FILE_PATH = os.path.join(ROOT, 'build', BUILD_FILE_NAME)
@@ -164,8 +172,8 @@ def build():
         '-s', 'NO_FILESYSTEM=1',
         '-s', 'EXPORTED_RUNTIME_METHODS=[]',
         '-s', 'LEGACY_VM_SUPPORT=1',
-        '-s', 'NO_DYNAMIC_EXECUTION=1',
     ]
+
     if IS_WASM_BUILD:
         emscripten_args += [
             '-s', 'WASM=1',
@@ -177,6 +185,16 @@ def build():
             '-s', 'AGGRESSIVE_VARIABLE_ELIMINATION=1',
             '-s', 'ELIMINATE_DUPLICATE_FUNCTIONS=1',
             '-s', 'SINGLE_FILE=1',
+        ]
+
+    if CLOSURE:
+        emscripten_args += [
+            '--closure', '1',
+            '-s', 'IGNORE_CLOSURE_COMPILER_ERRORS=1',
+        ]
+    else:
+        emscripten_args += [
+            '-s', 'NO_DYNAMIC_EXECUTION=1',
         ]
 
     emscripten_final_args = emscripten_args + [
