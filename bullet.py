@@ -163,14 +163,8 @@ def build():
         '-s', 'NO_EXIT_RUNTIME=1',
         '-s', 'NO_FILESYSTEM=1',
         '-s', 'EXPORTED_RUNTIME_METHODS=[]',
-        '-s', 'AGGRESSIVE_VARIABLE_ELIMINATION=1',
-        '-s', 'ELIMINATE_DUPLICATE_FUNCTIONS=1',
-        '-s', 'SINGLE_FILE=1',
+        '-s', 'LEGACY_VM_SUPPORT=1',
         '-s', 'NO_DYNAMIC_EXECUTION=1',
-        '-s', 'EXPORT_NAME="Bullet"',
-        '-s', 'MODULARIZE=1',
-        '-s', 'TOTAL_MEMORY=%d' % (512 * 1024 * 1024),
-        '-I', BULLET_SRC_DIRECTORY_RELATIVE,
     ]
     if IS_WASM_BUILD:
         emscripten_args = emscripten_args + [
@@ -178,16 +172,28 @@ def build():
             '-s', 'BINARYEN_IGNORE_IMPLICIT_TRAPS=1',
             '-s', 'BINARYEN_TRAP_MODE="allow"',
         ]
+    else:
+        emscripten_args = emscripten_args + [
+            '-s', 'AGGRESSIVE_VARIABLE_ELIMINATION=1',
+            '-s', 'ELIMINATE_DUPLICATE_FUNCTIONS=1',
+            '-s', 'SINGLE_FILE=1',
+        ]
 
-    emscripten_lib_args = emscripten_args
+    emscripten_final_args = emscripten_args + [
+        '-s', 'EXPORT_NAME="Bullet"',
+        '-s', 'MODULARIZE=1',
+        '-s', 'TOTAL_MEMORY=%d' % (512 * 1024 * 1024),
+    ]
 
-    emscripten_args = emscripten_args + ['-c']
+    print('===== Building emscripten bindings ... =====')
 
+    emscripten_args = emscripten_args + [
+        '-I', BULLET_SRC_DIRECTORY_RELATIVE,
+        '-c',
+    ]
     for include in BULLET_INCLUDES:
         include = include.replace(ROOT, '').lstrip(' \\/\t\n\r')
         emscripten_args += ['-include', include]
-
-    print('===== Building emscripten bindings ... =====')
 
     emscripten.Building.emcc(
         'glue.cpp',
@@ -202,7 +208,7 @@ def build():
 
     emscripten.Building.emcc(
         'libglue.bc',
-        emscripten_lib_args,
+        emscripten_final_args,
         BUILD_FILE_PATH
     )
 

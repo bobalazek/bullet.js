@@ -6,3 +6,4 @@ libglue.*
 CMake*
 third_party/*
 /bindings.idl
+/build/*.mem
